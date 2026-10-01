@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Segnali del giorno</title>
+<style>
+:root{
+  --bg:#f2f4f1; --card:#fff; --ink:#18262a; --muted:#66757a; --line:#dde3e0;
+  --buy:#0b7a5c; --buy-bg:#d9f1e8; --hold:#8a6410; --hold-bg:#f7ecd0; --avoid:#a8322a; --avoid-bg:#f8dedb;
+  --font:"Avenir Next","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0f1719; --card:#182225; --ink:#e6eeee; --muted:#8fa0a4; --line:#28363a;
+  --buy:#5fd3a9; --buy-bg:#123a2e; --hold:#e6bd63; --hold-bg:#3a2f12; --avoid:#f0908a; --avoid-bg:#41201d;
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 var(--font);padding:16px 14px 40px;max-width:720px;margin-inline:auto}
+h1{font-size:1.5rem;margin:4px 0 2px;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:.85rem;margin:0 0 14px}
+.riepilogo{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.riepilogo div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px}
+.riepilogo b{display:block;font-size:1.05rem;font-variant-numeric:tabular-nums}
+.riepilogo span{color:var(--muted);font-size:.78rem}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:6px}
+.tabs button{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 13px;border-radius:999px;font:inherit;cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible{outline:2px solid var(--buy);outline-offset:2px}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+th{font-weight:500;color:var(--muted);font-size:.78rem;text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle;font-variant-numeric:tabular-nums}
+tr.riga{cursor:pointer}
+tr:last-child td{border-bottom:0}
+.nome{display:block;color:var(--muted);font-size:.78rem}
+.num{text-align:right}
+.su{color:var(--buy)} .giu{color:var(--avoid)}
+.chip{display:inline-block;padding:3px 9px;border-radius:999px;font-size:.78rem;font-weight:600}
+.COMPRA{background:var(--buy-bg);color:var(--buy)} .MANTIENI{background:var(--hold-bg);color:var(--hold)} .EVITA{background:var(--avoid-bg);color:var(--avoid)}
+.dettaglio td{background:var(--bg);color:var(--muted);font-size:.85rem}
+.dettaglio[hidden]{display:none}
+.blocco{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:12px}
+.blocco h2{font-size:1rem;margin:0 0 8px}
+.blocco table{border:0}
+.avviso{color:var(--muted);font-size:.8rem;margin-top:18px}
+.vuoto{color:var(--muted);padding:10px 0}
+</style>
+</head>
+<body>
+<h1>Segnali del giorno</h1>
+<p class="sub" id="agg">Caricamento…</p>
+<div class="riepilogo" id="riepilogo"></div>
+<div class="tabs" role="tablist" id="tabs"></div>
+<div id="contenuto"></div>
+<p class="avviso" id="avviso"></p>
+
+<script>
+const $ = id => document.getElementById(id);
+const eur = n => n.toLocaleString("it-IT",{style:"currency",currency:"EUR",maximumFractionDigits:0});
+const pct = (n,d=1) => (n>=0?"+":"")+(n*100).toFixed(d).replace(".",",")+"%";
+const cls = n => n>=0?"su":"giu";
+function el(tag, props={}, ...kids){
+  const e = Object.assign(document.createElement(tag), props);
+  kids.flat().forEach(k => e.append(k));
+  return e;
+}
+
+fetch("data.json?"+Date.now()).then(r=>r.json()).then(d=>{
+  const data = new Date(d.aggiornato);
+  $("agg").textContent = "Aggiornato il "+data.toLocaleDateString("it-IT",{day:"numeric",month:"long"})+
+    " alle "+data.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"})+" (prezzi dell'ultima chiusura)";
+
+  const box = (val,lab,c) => el("div",{}, el("b",{textContent:val,className:c||""}), el("span",{textContent:lab}));
+  $("riepilogo").append(box(eur(d.valore),"Valore virtuale"),
+                        box(pct(d.rendimento),"Da inizio prova",cls(d.rendimento)),
+                        box(eur(d.cash),"Liquidità"));
+
+  const nomi = [...Object.keys(d.categorie),"Portafoglio"];
+  let attivo = nomi[0];
+  nomi.forEach(n => $("tabs").append(el("button",{textContent:n,role:"tab",onclick:()=>{attivo=n;disegna();}})));
+
+  function tabellaCat(righe){
+    const t = el("table",{}, el("thead",{}, el("tr",{},
+      el("th",{textContent:"Strumento"}), el("th",{textContent:"Prezzo",className:"num"}),
+      el("th",{textContent:"Punti",className:"num"}), el("th",{textContent:"Segnale"}))));
+    const tb = el("tbody");
+    righe.forEach(r=>{
+      const det = el("tr",{className:"dettaglio",hidden:true}, el("td",{colSpan:4,
+        textContent:r.motivo+(r.peso?" Peso consigliato: "+String(r.peso).replace(".",",")+"% del capitale.":"")}));
+      const riga = el("tr",{className:"riga",onclick:()=>{det.hidden=!det.hidden;}},
+        el("td",{}, r.ticker, el("span",{className:"nome",textContent:r.nome})),
+        el("td",{className:"num"}, r.prezzo.toLocaleString("it-IT")+" "+(r.valuta==="EUR"?"€":r.valuta==="USD"?"$":r.valuta),
+          el("span",{className:"nome "+cls(r.var),textContent:pct(r.var,2)})),
+        el("td",{className:"num",textContent:r.punteggio}),
+        el("td",{}, el("span",{className:"chip "+r.segnale,textContent:r.segnale})));
+      tb.append(riga,det);
+    });
+    t.append(tb);
+    return t;
+  }
+
+  function grafico(s){
+    if(s.length<2) return el("p",{className:"vuoto",textContent:"Il grafico compare dal secondo giorno di aggiornamento."});
+    const v=s.map(x=>x.valore), mn=Math.min(...v), mx=Math.max(...v), W=300, H=90;
+    const pts=v.map((y,i)=>(i/(v.length-1)*W).toFixed(1)+","+(H-4-(y-mn)/((mx-mn)||1)*(H-8)).toFixed(1)).join(" ");
+    const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+    svg.setAttribute("viewBox","0 0 "+W+" "+H); svg.setAttribute("width","100%"); svg.setAttribute("role","img");
+    svg.setAttribute("aria-label","Andamento del valore del portafoglio virtuale");
+    svg.innerHTML='<polyline fill="none" stroke="currentColor" stroke-width="2" points="'+pts+'"/>';
+    return svg;
+  }
+
+  function disegna(){
+    [...$("tabs").children].forEach(b=>b.setAttribute("aria-selected",b.textContent===attivo));
+    const c=$("contenuto"); c.replaceChildren();
+    if(attivo!=="Portafoglio"){
+      const righe=d.categorie[attivo];
+      c.append(righe.length?tabellaCat(righe):el("p",{className:"vuoto",textContent:"Nessun dato disponibile per questa categoria."}));
+      return;
+    }
+    c.append(el("div",{className:"blocco"}, el("h2",{textContent:"Valore del portafoglio virtuale"}), grafico(d.storico)));
+    const pos=el("div",{className:"blocco"}, el("h2",{textContent:"Posizioni aperte"}));
+    if(d.posizioni.length){
+      const t=el("table"); 
+      d.posizioni.forEach(p=>t.append(el("tr",{},
+        el("td",{}, p.ticker, el("span",{className:"nome",textContent:p.nome})),
+        el("td",{className:"num",textContent:eur(p.valore)}),
+        el("td",{className:"num "+cls(p.rendimento),textContent:pct(p.rendimento)}))));
+      pos.append(t);
+    } else pos.append(el("p",{className:"vuoto",textContent:"Nessuna posizione: per ora nessuno strumento ha un segnale COMPRA."}));
+    c.append(pos);
+    const op=el("div",{className:"blocco"}, el("h2",{textContent:"Ultime operazioni"}));
+    if(d.operazioni.length){
+      const t=el("table");
+      d.operazioni.forEach(o=>t.append(el("tr",{},
+        el("td",{textContent:new Date(o.data).toLocaleDateString("it-IT",{day:"numeric",month:"short"})}),
+        el("td",{}, el("span",{className:"chip "+(o.tipo==="COMPRA"?"COMPRA":"EVITA"),textContent:o.tipo})),
+        el("td",{textContent:o.ticker}),
+        el("td",{className:"num",textContent:o.prezzo.toLocaleString("it-IT")+" €"}))));
+      op.append(t);
+    } else op.append(el("p",{className:"vuoto",textContent:"Ancora nessuna operazione."}));
+    c.append(op);
+  }
+  disegna();
+  $("avviso").textContent = "Simulazione didattica con soldi finti: non è consulenza finanziaria."+
+    (d.errori.length?" Strumenti senza dati oggi: "+d.errori.join(", ")+".":"");
+}).catch(()=>{$("agg").textContent="Non riesco a leggere data.json: esegui prima aggiorna.py o il workflow.";});
+</script>
+</body>
+</html>
