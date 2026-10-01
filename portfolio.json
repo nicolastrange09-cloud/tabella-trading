@@ -1,0 +1,204 @@
+{
+ "inizio": "2026-10-01",
+ "cash": -1.1368683772161603e-13,
+ "posizioni": {
+  "CSSPX.MI": {
+   "quote": 0.5445955769558689,
+   "carico": 734.489990234375
+  },
+  "VWCE.MI": {
+   "quote": 2.3523877663703776,
+   "carico": 170.0399932861328
+  },
+  "ISAC.MI": {
+   "quote": 3.669724770642202,
+   "carico": 109.0
+  },
+  "SWDA.MI": {
+   "quote": 3.095735463320511,
+   "carico": 129.2100067138672
+  },
+  "EIMI.MI": {
+   "quote": 8.238080475459528,
+   "carico": 48.55500030517578
+  },
+  "IBTS.MI": {
+   "quote": 18.045655210298822,
+   "carico": 110.83000183105469
+  },
+  "MSFT": {
+   "quote": 2.200561776806618,
+   "carico": 454.42941458847235
+  },
+  "AAPL": {
+   "quote": 3.3891905179374393,
+   "carico": 295.05570569357377
+  },
+  "SOL-USD": {
+   "quote": 2.757388917121745,
+   "carico": 103.61769569035764
+  },
+  "ETH-USD": {
+   "quote": 0.1201603106742978,
+   "carico": 2377.7758571940826
+  },
+  "LINK-USD": {
+   "quote": 22.615655334245833,
+   "carico": 12.633473648744634
+  },
+  "BNB-USD": {
+   "quote": 0.4206637369981125,
+   "carico": 679.1987532682612
+  },
+  "AVAX-USD": {
+   "quote": 29.590441589372052,
+   "carico": 9.655627640815784
+  },
+  "BTC-USD": {
+   "quote": 0.0038631702245387704,
+   "carico": 73958.50276009973
+  },
+  "DOT-USD": {
+   "quote": 272.2700402507502,
+   "carico": 1.0493783504463212
+  },
+  "ZC=F": {
+   "quote": 0.9955201592832252,
+   "carico": 502.25
+  },
+  "BZ=F": {
+   "quote": 5.64842432028061,
+   "carico": 88.52026187281203
+  },
+  "HG=F": {
+   "quote": 85.7715749692786,
+   "carico": 5.829437085410736
+  },
+  "CL=F": {
+   "quote": 6.2021552673218645,
+   "carico": 80.6171368579593
+  }
+ },
+ "operazioni": [
+  {
+   "data": "2026-10-01",
+   "tipo": "COMPRA",
+   "ticker": "CSSPX.MI",
+   "prezzo": 734.49
+  },
+  {
+   "data": "2026-10-01",
+   "tipo": "COMPRA",
+   "ticker": "VWCE.MI",
+   "prezzo": 170.04
+  },
+  {
+   "data": "2026-10-01",
+   "tipo": "COMPRA",
+   "ticker": "ISAC.MI",
+   "prezzo": 109.0
+  },
+  {
+   "data": "2026-10-01",
+   "tipo": "COMPRA",
+   "ticker": "SWDA.MI",
+   "prezzo": 129.21
+  },
+  {
+   "data": "2026-10-01",
+   "tipo": "COMPRA",
+   "ticker": "EIMI.MI",
+   "prezzo": 48.56
+  },
+  {
+   "data": "2026-10-01",
+   "tipo": "COMPRA",
+   "ticker": "IBTS.MI",
+   "prezzo": 110.83
+  },
+  {
+   "data": "2026-10-01",
+   "tipo": "COMPRA",
+   "ticker": "MSFT",
+   "prezzo": 454.43
+  },
+  {
+   "data": "2026-10-01",
+   "tipo": "COMPRA",
+   "ticker": "AAPL",
+   "prezzo": 295.06
+  },
+  {
+   "data": "2026-10-01",
+   "tipo": "COMPRA",
+   "ticker": "SOL-USD",
+   "prezzo": 103.62
+  },
+  {
+   "data": "2026-10-01",
+   "tipo": "COMPRA",
+   "ticker": "ETH-USD",
+   "prezzo": 2377.78
+  },
+  {
+   "data": "2026-10-01",
+   "tipo": "COMPRA",
+   "ticker": "LINK-USD",
+   "prezzo": 12.63
+  },
+  {
+   "data": "2026-10-01",
+   "tipo": "COMPRA",
+   "ticker": "BNB-USD",
+   "prezzo": 679.2
+  },
+  {
+   "data": "2026-10-01",
+   "tipo": "COMPRA",
+   "ticker": "AVAX-USD",
+   "prezzo": 9.66
+  },
+  {
+   "data": "2026-10-01",
+   "tipo": "COMPRA",
+   "ticker": "BTC-USD",
+   "prezzo": 73958.5
+  },
+  {
+   "data": "2026-10-01",
+   "tipo": "COMPRA",
+   "ticker": "DOT-USD",
+   "prezzo": 1.05
+  },
+  {
+   "data": "2026-10-01",
+   "tipo": "COMPRA",
+   "ticker": "ZC=F",
+   "prezzo": 502.25
+  },
+  {
+   "data": "2026-10-01",
+   "tipo": "COMPRA",
+   "ticker": "BZ=F",
+   "prezzo": 88.52
+  },
+  {
+   "data": "2026-10-01",
+   "tipo": "COMPRA",
+   "ticker": "HG=F",
+   "prezzo": 5.83
+  },
+  {
+   "data": "2026-10-01",
+   "tipo": "COMPRA",
+   "ticker": "CL=F",
+   "prezzo": 80.62
+  }
+ ],
+ "storico": [
+  {
+   "data": "2026-10-01",
+   "valore": 10000.0
+  }
+ ]
+}
