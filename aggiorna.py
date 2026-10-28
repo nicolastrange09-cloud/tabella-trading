@@ -189,7 +189,6 @@ def analizza_categoria(nome_cat, strumenti, eurusd, errori):
         # Se stiamo usando MarketStack, ricostruisci un DataFrame standard per metriche()
         if USE_MARKETSTACK and isinstance(c, pd.Series) and len(c) == 1:
             # Crea un Series con un campione storico per calcolo SMA
-            import pandas as pd
             from datetime import timedelta, datetime, timezone
             dates = pd.date_range(end=datetime.now(timezone.utc), periods=210, freq='D')
             chiudi_finti = pd.Series([float(c.iloc[0])] * 210, index=dates)
