@@ -1,6 +1,6 @@
 {
  "inizio": "2026-10-29",
- "cash": 247.2305463669105,
+ "cash": 319.15691632122275,
  "posizioni": {
   "CSSPX.MI": {
    "quote": 0.06702502802254895,
@@ -9,10 +9,6 @@
   "SWDA.MI": {
    "quote": 0.38028598741068625,
    "carico": 131.47999572753906
-  },
-  "ISAC.MI": {
-   "quote": 0.4550004575276207,
-   "carico": 109.88999938964844
   },
   "VWCE.MI": {
    "quote": 0.29163021808098455,
@@ -42,13 +38,25 @@
    "quote": 11.314233350505697,
    "carico": 5.892283162401539
   },
-  "BZ=F": {
-   "quote": 0.6678723663671935,
-   "carico": 99.81947153958697
+  "SMEA.MI": {
+   "quote": 0.2338974324586588,
+   "carico": 105.62000274658203
   },
-  "CL=F": {
-   "quote": 0.7251260318805315,
-   "carico": 91.93804074827419
+  "MEUD.MI": {
+   "quote": 0.07712846831161926,
+   "carico": 320.29998779296875
+  },
+  "G.MI": {
+   "quote": 0.34445777715870035,
+   "carico": 43.72999954223633
+  },
+  "AAPL": {
+   "quote": 0.04881414517375805,
+   "carico": 308.5814241722599
+  },
+  "ENEL.MI": {
+   "quote": 1.5540223549418086,
+   "carico": 9.692999839782715
   }
  },
  "operazioni": [
@@ -136,6 +144,57 @@
    "ticker": "AAPL",
    "prezzo": 294.85,
    "motivo": "Perdita >5%"
+  },
+  {
+   "data": "2026-11-06",
+   "tipo": "VENDI",
+   "ticker": "ISAC.MI",
+   "prezzo": 106.25,
+   "motivo": "EVITA"
+  },
+  {
+   "data": "2026-11-06",
+   "tipo": "VENDI",
+   "ticker": "BZ=F",
+   "prezzo": 88.31,
+   "motivo": "Perdita >10%"
+  },
+  {
+   "data": "2026-11-06",
+   "tipo": "VENDI",
+   "ticker": "CL=F",
+   "prezzo": 81.65,
+   "motivo": "Perdita >10%"
+  },
+  {
+   "data": "2026-11-06",
+   "tipo": "COMPRA",
+   "ticker": "SMEA.MI",
+   "prezzo": 105.62
+  },
+  {
+   "data": "2026-11-06",
+   "tipo": "COMPRA",
+   "ticker": "MEUD.MI",
+   "prezzo": 320.3
+  },
+  {
+   "data": "2026-11-06",
+   "tipo": "COMPRA",
+   "ticker": "G.MI",
+   "prezzo": 43.73
+  },
+  {
+   "data": "2026-11-06",
+   "tipo": "COMPRA",
+   "ticker": "AAPL",
+   "prezzo": 308.58
+  },
+  {
+   "data": "2026-11-06",
+   "tipo": "COMPRA",
+   "ticker": "ENEL.MI",
+   "prezzo": 9.69
   }
  ],
  "storico": [
@@ -154,6 +213,10 @@
   {
    "data": "2026-11-03",
    "valore": 981.24
+  },
+  {
+   "data": "2026-11-06",
+   "valore": 972.45
   }
  ]
 }
