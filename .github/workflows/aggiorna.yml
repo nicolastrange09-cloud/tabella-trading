@@ -36,16 +36,13 @@ jobs:
       - name: Calcola segnali e portafoglio
         run: python aggiorna.py
 
-      - name: Salva lo stato del portafoglio virtuale
+     - name: Salva lo stato del portafoglio virtuale
         run: |
           git config user.name "aggiornamento-automatico"
           git config user.email "noreply@users.noreply.github.com"
           git add portfolio.json
-          if ! git diff --staged --quiet; then
-            git commit -m "Aggiorna portafoglio virtuale"
-            git pull --rebase
-            git push
-          fi
+          git commit -m "Aggiorna portafoglio virtuale" || echo "Nessuna modifica da committare"
+          git push origin main || git push
 
       - name: Prepara il sito
         run: |
