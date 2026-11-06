@@ -30,6 +30,9 @@ jobs:
       - name: Installa le librerie
         run: pip install yfinance pandas
 
+      - name: Controlla che il codice funzioni
+        run: python test_aggiorna.py
+
       - name: Calcola segnali e portafoglio
         run: python aggiorna.py
 
@@ -40,6 +43,7 @@ jobs:
           git add portfolio.json
           if ! git diff --staged --quiet; then
             git commit -m "Aggiorna portafoglio virtuale"
+            git pull --rebase
             git push
           fi
 

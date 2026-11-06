@@ -1,0 +1,725 @@
+{
+ "aggiornato": "2026-11-03T14:43+00:00",
+ "capitale_iniziale": 1000.0,
+ "valore": 981.24,
+ "cash": 247.23,
+ "rendimento": -0.0188,
+ "categorie": {
+  "ETF": [
+   {
+    "ticker": "CSSPX.MI",
+    "nome": "iShares Core S&P 500",
+    "prezzo": 728.41,
+    "valuta": "EUR",
+    "var": -0.0097,
+    "punteggio": 74,
+    "segnale": "MANTIENI",
+    "consiglia": "MANTIENI",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sopra quella a 200. Rendimento +1% a 3 mesi, +8% a 6 mesi. Volatilità 9% annua."
+   },
+   {
+    "ticker": "SMEA.MI",
+    "nome": "iShares Core MSCI Europe",
+    "prezzo": 105.54,
+    "valuta": "EUR",
+    "var": -0.0019,
+    "punteggio": 74,
+    "segnale": "COMPRA",
+    "consiglia": "SI",
+    "peso": 20.0,
+    "motivo": "Prezzo sopra la media a 50 giorni e sopra quella a 200. Rendimento -1% a 3 mesi, +7% a 6 mesi. Volatilità 10% annua."
+   },
+   {
+    "ticker": "SWDA.MI",
+    "nome": "iShares Core MSCI World",
+    "prezzo": 129.05,
+    "valuta": "EUR",
+    "var": -0.0069,
+    "punteggio": 71,
+    "segnale": "MANTIENI",
+    "consiglia": "MANTIENI",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sopra quella a 200. Rendimento +1% a 3 mesi, +8% a 6 mesi. Volatilità 9% annua."
+   },
+   {
+    "ticker": "MEUD.MI",
+    "nome": "Amundi Stoxx Europe 600",
+    "prezzo": 320.4,
+    "valuta": "EUR",
+    "var": -0.0012,
+    "punteggio": 54,
+    "segnale": "MANTIENI",
+    "consiglia": "MANTIENI",
+    "peso": 0.0,
+    "motivo": "Prezzo sopra la media a 50 giorni e sopra quella a 200. Rendimento -1% a 3 mesi, +7% a 6 mesi. Volatilità 10% annua."
+   },
+   {
+    "ticker": "ISAC.MI",
+    "nome": "iShares MSCI ACWI",
+    "prezzo": 107.66,
+    "valuta": "EUR",
+    "var": -0.0087,
+    "punteggio": 51,
+    "segnale": "MANTIENI",
+    "consiglia": "MANTIENI",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sopra quella a 200. Rendimento +0% a 3 mesi, +6% a 6 mesi. Volatilità 10% annua."
+   },
+   {
+    "ticker": "VWCE.MI",
+    "nome": "Vanguard FTSE All-World",
+    "prezzo": 168.05,
+    "valuta": "EUR",
+    "var": -0.008,
+    "punteggio": 49,
+    "segnale": "MANTIENI",
+    "consiglia": "MANTIENI",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sopra quella a 200. Rendimento +0% a 3 mesi, +6% a 6 mesi. Volatilità 10% annua."
+   },
+   {
+    "ticker": "EIMI.MI",
+    "nome": "iShares Core MSCI Emerging Markets",
+    "prezzo": 44.87,
+    "valuta": "EUR",
+    "var": -0.0121,
+    "punteggio": 6,
+    "segnale": "EVITA",
+    "consiglia": "EVITA",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sotto quella a 200. Rendimento -4% a 3 mesi, -5% a 6 mesi. Volatilità 19% annua."
+   }
+  ],
+  "Obbligazioni": [
+   {
+    "ticker": "IBGS.MI",
+    "nome": "iShares Euro Govt Bond 1-3 anni",
+    "prezzo": 139.75,
+    "valuta": "EUR",
+    "var": 0.0005,
+    "punteggio": 90,
+    "segnale": "COMPRA",
+    "consiglia": "SI",
+    "peso": 10.2,
+    "motivo": "Prezzo sopra la media a 50 giorni e sopra quella a 200. Rendimento +0% a 3 mesi, +1% a 6 mesi. Volatilità 1% annua."
+   },
+   {
+    "ticker": "IBTS.MI",
+    "nome": "iShares US Treasury 1-3 anni",
+    "prezzo": 112.79,
+    "valuta": "EUR",
+    "var": 0.0012,
+    "punteggio": 87,
+    "segnale": "COMPRA",
+    "consiglia": "SI",
+    "peso": 9.8,
+    "motivo": "Prezzo sopra la media a 50 giorni e sopra quella a 200. Rendimento +3% a 3 mesi, +6% a 6 mesi. Volatilità 6% annua."
+   },
+   {
+    "ticker": "IEAC.MI",
+    "nome": "iShares Core Euro Corp Bond",
+    "prezzo": 116.72,
+    "valuta": "EUR",
+    "var": 0.0002,
+    "punteggio": 60,
+    "segnale": "EVITA",
+    "consiglia": "EVITA",
+    "peso": 0.0,
+    "motivo": "Prezzo sopra la media a 50 giorni e sotto quella a 200. Rendimento -1% a 3 mesi, -0% a 6 mesi. Volatilità 3% annua."
+   },
+   {
+    "ticker": "IBGL.MI",
+    "nome": "iShares Euro Govt Bond 15-30 anni",
+    "prezzo": 153.88,
+    "valuta": "EUR",
+    "var": -0.0013,
+    "punteggio": 27,
+    "segnale": "EVITA",
+    "consiglia": "EVITA",
+    "peso": 0.0,
+    "motivo": "Prezzo sopra la media a 50 giorni e sotto quella a 200. Rendimento -4% a 3 mesi, -4% a 6 mesi. Volatilità 10% annua."
+   },
+   {
+    "ticker": "IHYG.MI",
+    "nome": "iShares Euro High Yield",
+    "prezzo": 88.29,
+    "valuta": "EUR",
+    "var": 0.0019,
+    "punteggio": 23,
+    "segnale": "EVITA",
+    "consiglia": "EVITA",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sotto quella a 200. Rendimento -2% a 3 mesi, -1% a 6 mesi. Volatilità 6% annua."
+   },
+   {
+    "ticker": "IBCI.MI",
+    "nome": "iShares Euro Inflation Linked",
+    "prezzo": 230.66,
+    "valuta": "EUR",
+    "var": -0.0013,
+    "punteggio": 23,
+    "segnale": "EVITA",
+    "consiglia": "EVITA",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sotto quella a 200. Rendimento -2% a 3 mesi, -3% a 6 mesi. Volatilità 5% annua."
+   }
+  ],
+  "Azioni": [
+   {
+    "ticker": "RACE.MI",
+    "nome": "Ferrari",
+    "prezzo": 371.2,
+    "valuta": "EUR",
+    "var": 0.0341,
+    "punteggio": 92,
+    "segnale": "COMPRA",
+    "consiglia": "SI",
+    "peso": 10.8,
+    "motivo": "Prezzo sopra la media a 50 giorni e sopra quella a 200. Rendimento +4% a 3 mesi, +32% a 6 mesi. Volatilità 20% annua."
+   },
+   {
+    "ticker": "ENI.MI",
+    "nome": "Eni",
+    "prezzo": 26.12,
+    "valuta": "EUR",
+    "var": -0.0149,
+    "punteggio": 78,
+    "segnale": "COMPRA",
+    "consiglia": "SI",
+    "peso": 9.2,
+    "motivo": "Prezzo sopra la media a 50 giorni e sopra quella a 200. Rendimento +13% a 3 mesi, +14% a 6 mesi. Volatilità 28% annua."
+   },
+   {
+    "ticker": "MSFT",
+    "nome": "Microsoft",
+    "prezzo": 511.89,
+    "valuta": "USD",
+    "var": 0.0094,
+    "punteggio": 66,
+    "segnale": "MANTIENI",
+    "consiglia": "MANTIENI",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sopra quella a 200. Rendimento +5% a 3 mesi, +25% a 6 mesi. Volatilità 22% annua."
+   },
+   {
+    "ticker": "AAPL",
+    "nome": "Apple",
+    "prezzo": 330.43,
+    "valuta": "USD",
+    "var": -0.0233,
+    "punteggio": 64,
+    "segnale": "MANTIENI",
+    "consiglia": "MANTIENI",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sopra quella a 200. Rendimento +6% a 3 mesi, +16% a 6 mesi. Volatilità 18% annua."
+   },
+   {
+    "ticker": "G.MI",
+    "nome": "Generali",
+    "prezzo": 42.98,
+    "valuta": "EUR",
+    "var": 0.0012,
+    "punteggio": 58,
+    "segnale": "MANTIENI",
+    "consiglia": "MANTIENI",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sopra quella a 200. Rendimento -4% a 3 mesi, +14% a 6 mesi. Volatilità 19% annua."
+   },
+   {
+    "ticker": "ENEL.MI",
+    "nome": "Enel",
+    "prezzo": 9.32,
+    "valuta": "EUR",
+    "var": -0.0011,
+    "punteggio": 50,
+    "segnale": "EVITA",
+    "consiglia": "EVITA",
+    "peso": 0.0,
+    "motivo": "Prezzo sopra la media a 50 giorni e sotto quella a 200. Rendimento -6% a 3 mesi, -3% a 6 mesi. Volatilità 15% annua."
+   },
+   {
+    "ticker": "ISP.MI",
+    "nome": "Intesa Sanpaolo",
+    "prezzo": 6.0,
+    "valuta": "EUR",
+    "var": 0.0077,
+    "punteggio": 48,
+    "segnale": "MANTIENI",
+    "consiglia": "MANTIENI",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sopra quella a 200. Rendimento -12% a 3 mesi, +6% a 6 mesi. Volatilità 26% annua."
+   },
+   {
+    "ticker": "LDO.MI",
+    "nome": "Leonardo",
+    "prezzo": 51.71,
+    "valuta": "EUR",
+    "var": -0.0065,
+    "punteggio": 32,
+    "segnale": "EVITA",
+    "consiglia": "EVITA",
+    "peso": 0.0,
+    "motivo": "Prezzo sopra la media a 50 giorni e sotto quella a 200. Rendimento -12% a 3 mesi, +2% a 6 mesi. Volatilità 29% annua."
+   },
+   {
+    "ticker": "UCG.MI",
+    "nome": "UniCredit",
+    "prezzo": 74.42,
+    "valuta": "EUR",
+    "var": 0.0003,
+    "punteggio": 18,
+    "segnale": "EVITA",
+    "consiglia": "EVITA",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sotto quella a 200. Rendimento -12% a 3 mesi, +5% a 6 mesi. Volatilità 30% annua."
+   },
+   {
+    "ticker": "STLAM.MI",
+    "nome": "Stellantis",
+    "prezzo": 4.17,
+    "valuta": "EUR",
+    "var": -0.0153,
+    "punteggio": 4,
+    "segnale": "EVITA",
+    "consiglia": "EVITA",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sotto quella a 200. Rendimento -14% a 3 mesi, -35% a 6 mesi. Volatilità 58% annua."
+   }
+  ],
+  "Crypto": [
+   {
+    "ticker": "ETH-USD",
+    "nome": "Ethereum",
+    "prezzo": 2286.93,
+    "valuta": "USD",
+    "var": 0.0169,
+    "punteggio": 68,
+    "segnale": "MANTIENI",
+    "consiglia": "MANTIENI",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sopra quella a 200. Rendimento -5% a 3 mesi, +46% a 6 mesi. Volatilità 30% annua."
+   },
+   {
+    "ticker": "BTC-USD",
+    "nome": "Bitcoin",
+    "prezzo": 77262.01,
+    "valuta": "USD",
+    "var": 0.0076,
+    "punteggio": 66,
+    "segnale": "MANTIENI",
+    "consiglia": "MANTIENI",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sopra quella a 200. Rendimento -0% a 3 mesi, +32% a 6 mesi. Volatilità 24% annua."
+   },
+   {
+    "ticker": "LINK-USD",
+    "nome": "Chainlink",
+    "prezzo": 11.2,
+    "valuta": "USD",
+    "var": 0.0082,
+    "punteggio": 66,
+    "segnale": "MANTIENI",
+    "consiglia": "MANTIENI",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sopra quella a 200. Rendimento -0% a 3 mesi, +56% a 6 mesi. Volatilità 53% annua."
+   },
+   {
+    "ticker": "BNB-USD",
+    "nome": "BNB",
+    "prezzo": 697.49,
+    "valuta": "USD",
+    "var": -0.0008,
+    "punteggio": 58,
+    "segnale": "MANTIENI",
+    "consiglia": "MANTIENI",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sopra quella a 200. Rendimento +2% a 3 mesi, +28% a 6 mesi. Volatilità 32% annua."
+   },
+   {
+    "ticker": "AVAX-USD",
+    "nome": "Avalanche",
+    "prezzo": 8.6,
+    "valuta": "USD",
+    "var": 0.0255,
+    "punteggio": 58,
+    "segnale": "MANTIENI",
+    "consiglia": "MANTIENI",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sopra quella a 200. Rendimento +19% a 3 mesi, +32% a 6 mesi. Volatilità 55% annua."
+   },
+   {
+    "ticker": "SOL-USD",
+    "nome": "Solana",
+    "prezzo": 93.39,
+    "valuta": "USD",
+    "var": 0.0169,
+    "punteggio": 44,
+    "segnale": "MANTIENI",
+    "consiglia": "MANTIENI",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sopra quella a 200. Rendimento -7% a 3 mesi, +27% a 6 mesi. Volatilità 35% annua."
+   },
+   {
+    "ticker": "XRP-USD",
+    "nome": "XRP",
+    "prezzo": 1.28,
+    "valuta": "USD",
+    "var": 0.0236,
+    "punteggio": 38,
+    "segnale": "EVITA",
+    "consiglia": "EVITA",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sopra quella a 200. Rendimento -5% a 3 mesi, +23% a 6 mesi. Volatilità 37% annua."
+   },
+   {
+    "ticker": "ADA-USD",
+    "nome": "Cardano",
+    "prezzo": 0.19,
+    "valuta": "USD",
+    "var": 0.0134,
+    "punteggio": 24,
+    "segnale": "EVITA",
+    "consiglia": "EVITA",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sotto quella a 200. Rendimento -3% a 3 mesi, +32% a 6 mesi. Volatilità 53% annua."
+   },
+   {
+    "ticker": "DOT-USD",
+    "nome": "Polkadot",
+    "prezzo": 0.94,
+    "valuta": "USD",
+    "var": 0.0049,
+    "punteggio": 16,
+    "segnale": "EVITA",
+    "consiglia": "EVITA",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sotto quella a 200. Rendimento +8% a 3 mesi, +15% a 6 mesi. Volatilità 68% annua."
+   },
+   {
+    "ticker": "DOGE-USD",
+    "nome": "Dogecoin",
+    "prezzo": 0.08,
+    "valuta": "USD",
+    "var": 0.0137,
+    "punteggio": 12,
+    "segnale": "EVITA",
+    "consiglia": "EVITA",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sotto quella a 200. Rendimento -8% a 3 mesi, +4% a 6 mesi. Volatilità 37% annua."
+   }
+  ],
+  "Materie prime": [
+   {
+    "ticker": "BZ=F",
+    "nome": "Petrolio Brent",
+    "prezzo": 103.82,
+    "valuta": "USD",
+    "var": -0.0091,
+    "punteggio": 82,
+    "segnale": "COMPRA",
+    "consiglia": "SI",
+    "peso": 10.1,
+    "motivo": "Prezzo sopra la media a 50 giorni e sopra quella a 200. Rendimento +31% a 3 mesi, -6% a 6 mesi. Volatilità 45% annua."
+   },
+   {
+    "ticker": "CL=F",
+    "nome": "Petrolio WTI",
+    "prezzo": 96.28,
+    "valuta": "USD",
+    "var": -0.0019,
+    "punteggio": 80,
+    "segnale": "COMPRA",
+    "consiglia": "SI",
+    "peso": 9.9,
+    "motivo": "Prezzo sopra la media a 50 giorni e sopra quella a 200. Rendimento +28% a 3 mesi, -6% a 6 mesi. Volatilità 43% annua."
+   },
+   {
+    "ticker": "HG=F",
+    "nome": "Rame",
+    "prezzo": 6.43,
+    "valuta": "USD",
+    "var": -0.018,
+    "punteggio": 64,
+    "segnale": "MANTIENI",
+    "consiglia": "MANTIENI",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sopra quella a 200. Rendimento -4% a 3 mesi, +8% a 6 mesi. Volatilità 19% annua."
+   },
+   {
+    "ticker": "ZW=F",
+    "nome": "Grano",
+    "prezzo": 600.25,
+    "valuta": "USX",
+    "var": -0.0103,
+    "punteggio": 38,
+    "segnale": "EVITA",
+    "consiglia": "EVITA",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sotto quella a 200. Rendimento -7% a 3 mesi, -3% a 6 mesi. Volatilità 18% annua."
+   },
+   {
+    "ticker": "ZC=F",
+    "nome": "Mais",
+    "prezzo": 443.75,
+    "valuta": "USX",
+    "var": -0.01,
+    "punteggio": 38,
+    "segnale": "EVITA",
+    "consiglia": "EVITA",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sotto quella a 200. Rendimento +2% a 3 mesi, -5% a 6 mesi. Volatilità 19% annua."
+   },
+   {
+    "ticker": "NG=F",
+    "nome": "Gas naturale",
+    "prezzo": 2.89,
+    "valuta": "USD",
+    "var": 0.0116,
+    "punteggio": 32,
+    "segnale": "EVITA",
+    "consiglia": "EVITA",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sotto quella a 200. Rendimento +7% a 3 mesi, +4% a 6 mesi. Volatilità 54% annua."
+   },
+   {
+    "ticker": "GC=F",
+    "nome": "Oro",
+    "prezzo": 3954.8,
+    "valuta": "USD",
+    "var": -0.0037,
+    "punteggio": 24,
+    "segnale": "EVITA",
+    "consiglia": "EVITA",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sotto quella a 200. Rendimento -8% a 3 mesi, -13% a 6 mesi. Volatilità 20% annua."
+   },
+   {
+    "ticker": "KC=F",
+    "nome": "Caffè",
+    "prezzo": 287.2,
+    "valuta": "USX",
+    "var": -0.0168,
+    "punteggio": 24,
+    "segnale": "EVITA",
+    "consiglia": "EVITA",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sotto quella a 200. Rendimento -12% a 3 mesi, -6% a 6 mesi. Volatilità 31% annua."
+   },
+   {
+    "ticker": "PL=F",
+    "nome": "Platino",
+    "prezzo": 1441.6,
+    "valuta": "USD",
+    "var": -0.0119,
+    "punteggio": 18,
+    "segnale": "EVITA",
+    "consiglia": "EVITA",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sotto quella a 200. Rendimento -17% a 3 mesi, -26% a 6 mesi. Volatilità 31% annua."
+   },
+   {
+    "ticker": "SI=F",
+    "nome": "Argento",
+    "prezzo": 50.01,
+    "valuta": "USD",
+    "var": -0.014,
+    "punteggio": 10,
+    "segnale": "EVITA",
+    "consiglia": "EVITA",
+    "peso": 0.0,
+    "motivo": "Prezzo sotto la media a 50 giorni e sotto quella a 200. Rendimento -19% a 3 mesi, -32% a 6 mesi. Volatilità 37% annua."
+   }
+  ]
+ },
+ "posizioni": [
+  {
+   "ticker": "IBGS.MI",
+   "nome": "iShares Euro Govt Bond 1-3 anni",
+   "valore": 100.09,
+   "rendimento": 0.0009
+  },
+  {
+   "ticker": "IBTS.MI",
+   "nome": "iShares US Treasury 1-3 anni",
+   "valore": 99.94,
+   "rendimento": -0.0006
+  },
+  {
+   "ticker": "HG=F",
+   "nome": "Rame",
+   "valore": 64.97,
+   "rendimento": -0.0254
+  },
+  {
+   "ticker": "CL=F",
+   "nome": "Petrolio WTI",
+   "valore": 62.39,
+   "rendimento": -0.0641
+  },
+  {
+   "ticker": "BZ=F",
+   "nome": "Petrolio Brent",
+   "valore": 61.97,
+   "rendimento": -0.0705
+  },
+  {
+   "ticker": "RACE.MI",
+   "nome": "Ferrari",
+   "valore": 51.96,
+   "rendimento": 0.0392
+  },
+  {
+   "ticker": "SWDA.MI",
+   "nome": "iShares Core MSCI World",
+   "valore": 49.08,
+   "rendimento": -0.0185
+  },
+  {
+   "ticker": "VWCE.MI",
+   "nome": "Vanguard FTSE All-World",
+   "valore": 49.01,
+   "rendimento": -0.0198
+  },
+  {
+   "ticker": "ISAC.MI",
+   "nome": "iShares MSCI ACWI",
+   "valore": 48.99,
+   "rendimento": -0.0203
+  },
+  {
+   "ticker": "CSSPX.MI",
+   "nome": "iShares Core S&P 500",
+   "valore": 48.82,
+   "rendimento": -0.0236
+  },
+  {
+   "ticker": "ENI.MI",
+   "nome": "Eni",
+   "valore": 48.57,
+   "rendimento": -0.0286
+  },
+  {
+   "ticker": "MSFT",
+   "nome": "Microsoft",
+   "valore": 48.23,
+   "rendimento": -0.0354
+  }
+ ],
+ "operazioni": [
+  {
+   "data": "2026-11-03",
+   "tipo": "VENDI",
+   "ticker": "AAPL",
+   "prezzo": 294.85
+  },
+  {
+   "data": "2026-11-03",
+   "tipo": "VENDI",
+   "ticker": "AAPL",
+   "prezzo": 294.85,
+   "motivo": "Perdita >5%"
+  },
+  {
+   "data": "2026-10-29",
+   "tipo": "COMPRA",
+   "ticker": "CL=F",
+   "prezzo": 91.94
+  },
+  {
+   "data": "2026-10-29",
+   "tipo": "COMPRA",
+   "ticker": "BZ=F",
+   "prezzo": 99.82
+  },
+  {
+   "data": "2026-10-29",
+   "tipo": "COMPRA",
+   "ticker": "HG=F",
+   "prezzo": 5.89
+  },
+  {
+   "data": "2026-10-29",
+   "tipo": "COMPRA",
+   "ticker": "ENI.MI",
+   "prezzo": 26.89
+  },
+  {
+   "data": "2026-10-29",
+   "tipo": "COMPRA",
+   "ticker": "RACE.MI",
+   "prezzo": 357.2
+  },
+  {
+   "data": "2026-10-29",
+   "tipo": "COMPRA",
+   "ticker": "MSFT",
+   "prezzo": 474.26
+  },
+  {
+   "data": "2026-10-29",
+   "tipo": "COMPRA",
+   "ticker": "AAPL",
+   "prezzo": 312.13
+  },
+  {
+   "data": "2026-10-29",
+   "tipo": "COMPRA",
+   "ticker": "IBTS.MI",
+   "prezzo": 112.86
+  },
+  {
+   "data": "2026-10-29",
+   "tipo": "COMPRA",
+   "ticker": "IBGS.MI",
+   "prezzo": 139.62
+  },
+  {
+   "data": "2026-10-29",
+   "tipo": "COMPRA",
+   "ticker": "VWCE.MI",
+   "prezzo": 171.45
+  },
+  {
+   "data": "2026-10-29",
+   "tipo": "COMPRA",
+   "ticker": "ISAC.MI",
+   "prezzo": 109.89
+  },
+  {
+   "data": "2026-10-29",
+   "tipo": "COMPRA",
+   "ticker": "SWDA.MI",
+   "prezzo": 131.48
+  },
+  {
+   "data": "2026-10-29",
+   "tipo": "COMPRA",
+   "ticker": "CSSPX.MI",
+   "prezzo": 745.99
+  }
+ ],
+ "storico": [
+  {
+   "data": "2026-10-29",
+   "valore": 1000.0
+  },
+  {
+   "data": "2026-10-31",
+   "valore": 999.05
+  },
+  {
+   "data": "2026-11-01",
+   "valore": 996.77
+  },
+  {
+   "data": "2026-11-03",
+   "valore": 981.24
+  }
+ ],
+ "errori": [
+  "CNDX.MI",
+  "IEGA.MI",
+  "IDTL.MI"
+ ]
+}
