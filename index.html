@@ -7,28 +7,14 @@
 <style>
 :root{
   --bg:#f2f4f1; --card:#fff; --ink:#18262a; --muted:#66757a; --line:#dde3e0;
-  --buy:#059669; --buy-bg:#d1fae5; --hold:#10b981; --hold-bg:#ecfdf5; --avoid:#dc2626; --avoid-bg:#fee2e2;
-  --weak:#f59e0b; --weak-bg:#fef3c7;
-  /* Gradient colors based on punteggio */
-  --strong-green-50:#dcfce7; --strong-green-100:#bbf7d0; --strong-green-200:#86efac; --strong-green-400:#4ade80; --strong-green-600:#16a34a; --strong-green-700:#15803d;
-  --medium-green-50:#fef3c7; --medium-green-100:#fde68a; --medium-green-200:#fcd34d; --medium-green-400:#fbbf24; --medium-green-600:#f59e0b; --medium-green-700:#d97706;
-  --yellow-50:#fef3c7; --yellow-100:#fef08a; --yellow-200:#fde047; --yellow-400:#facc15; --yellow-600:#eab308; --yellow-700:#ca8a04;
-  --orange-50:#fed7aa; --orange-100:#fdba74; --orange-200:#fb923c; --orange-400:#f97316; --orange-600:#ea580c; --orange-700:#c2410c;
-  --red-50:#fee2e2; --red-100:#fecaca; --red-200:#fca5a5; --red-400:#f87171; --red-600:#ef4444; --red-700:#dc2626;
-  --purple-50:#e9d5ff; --purple-100:#ddd6fe; --purple-200:#c4b5fd; --purple-400:#a78bfa; --purple-600:#9333ea; --purple-700:#7e22ce;
+  --buy:#059669; --buy-bg:#d1fae5; --hold:#0f766e; --hold-bg:#ecfdf5;
+  --avoid:#dc2626; --avoid-bg:#fee2e2; --weak:#b45309; --weak-bg:#fef3c7;
   --font:"Avenir Next","Segoe UI",system-ui,sans-serif;
 }
 @media (prefers-color-scheme:dark){:root{
   --bg:#0f1719; --card:#182225; --ink:#e6eeee; --muted:#8fa0a4; --line:#28363a;
-  --buy:#10b981; --buy-bg:#064e3b; --hold:#34d399; --hold-bg:#052e20; --avoid:#ef4444; --avoid-bg:#7f1d1d;
-  --weak:#fbbf24; --weak-bg:#78350f;
-  /* Dark theme gradient colors */
-  --strong-green-50:#064e3b; --strong-green-100:#052e20; --strong-green-200:#064e3b; --strong-green-400:#16a34a; --strong-green-600:#22c55e; --strong-green-700:#4ade80;
-  --medium-green-50:#78350f; --medium-green-100:#92400e; --medium-green-200:#a16207; --medium-green-400:#f59e0b; --medium-green-600:#fbbf24; --medium-green-700:#fde047;
-  --yellow-50:#713f12; --yellow-100:#854d0e; --yellow-200:#a16207; --yellow-400:#facc15; --yellow-600:#eab308; --yellow-700:#f8e977;
-  --orange-50:#7c2d12; --orange-100:#9a3412; --orange-200:#c2410c; --orange-400:#f97316; --orange-600:#fb923c; --orange-700:#fdba74;
-  --red-50:#7f1d1d; --red-100:#991b1b; --red-200:#b91c1c; --red-400:#ef4444; --red-600:#f87171; --red-700:#fca5a5;
-  --purple-50:#3b0764; --purple-100:#581c87; --purple-200:#6d22d6; --purple-400:#a78bfa; --purple-600:#c4b5fd; --purple-700:#ddd6fe;
+  --buy:#34d399; --buy-bg:#064e3b; --hold:#5eead4; --hold-bg:#052e2b;
+  --avoid:#f87171; --avoid-bg:#7f1d1d; --weak:#fbbf24; --weak-bg:#78350f;
 }}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 var(--font);padding:16px 14px 40px;max-width:720px;margin-inline:auto}
@@ -54,15 +40,16 @@ tr:last-child td{border-bottom:0}
 .chip{display:inline-block;padding:3px 9px;border-radius:999px;font-size:.78rem;font-weight:600}
 .COMPRA,.SI{background:var(--buy-bg);color:var(--buy)}
 .MANTIENI{background:var(--hold-bg);color:var(--hold)}
-.EVITA{background:var(--avoid-bg);color:var(--avoid)}
+.EVITA,.VENDI{background:var(--avoid-bg);color:var(--avoid)}
 .DEBOLE{background:var(--weak-bg);color:var(--weak)}
-.dettaglio td{background:var(--bg);color:var(--muted);font-size:0.9rem}
+.dettaglio td{background:var(--bg);color:var(--muted);font-size:.9rem;line-height:1.4}
 .dettaglio[hidden]{display:none}
 .blocco{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:12px}
 .blocco h2{font-size:1rem;margin:0 0 8px}
 .blocco table{border:0}
 .avviso{color:var(--muted);font-size:.8rem;margin-top:18px}
 .vuoto{color:var(--muted);padding:10px 0}
+.conteggio{color:var(--muted);font-size:.82rem;margin:0 0 8px}
 </style>
 </head>
 <body>
@@ -71,282 +58,142 @@ tr:last-child td{border-bottom:0}
 <div class="riepilogo" id="riepilogo"></div>
 <div class="tabs" role="tablist" id="tabs"></div>
 <div class="filtri" id="filtri" hidden></div>
+<p class="conteggio" id="conteggio"></p>
 <div id="contenuto"></div>
 <p class="avviso" id="avviso"></p>
 
 <script>
 const $ = id => document.getElementById(id);
-const eur = n => n.toLocaleString("it-IT",{style:"currency",currency:"EUR",maximumFraction:0});
-const pct = (n,d=1) => (n>=0?"+":"")+(n*100).toFixed(d).replace(".",",")+"%";
-const cls = n => n>=0?"su":"giu";
+const eur = n => n.toLocaleString("it-IT", {style:"currency", currency:"EUR", maximumFractionDigits:0});
+const pct = (n, d=1) => (n >= 0 ? "+" : "") + (n*100).toFixed(d).replace(".", ",") + "%";
+const cls = n => n >= 0 ? "su" : "giu";
+const simbolo = v => v === "EUR" ? "€" : v === "USD" ? "$" : v;
 
-// Helper function per trovare operazioni di acquisto corrispondenti
-function trovaAcquisto(operazioni, data, ticker) {
-  return operazioni.find(op => op.data === data && op.tipo === "COMPRA" && op.ticker === ticker);
-}
-function el(tag, props={}, ...kids){
+function el(tag, props = {}, ...kids) {
   const e = Object.assign(document.createElement(tag), props);
-  kids.flat().forEach(k => e.append(k));
+  kids.flat().forEach(k => { if (k) e.append(k); });
   return e;
 }
 
-// Helper function to get gradient based on punteggio
-def getGradientFromPunteggio(punteggio) {
-  if (punteggio >= 90) return "linear-gradient(135deg, var(--strong-green-400), var(--strong-green-600))";
-  if (punteggio >= 80) return "linear-gradient(135deg, var(--strong-green-400), var(--strong-green-600))";
-  if (punteggio >= 70) return "linear-gradient(135deg, var(--strong-green-400), var(--strong-green-600))";
-  if (punteggio >= 65) return "linear-gradient(135deg, var(--medium-green-400), var(--medium-green-600))";
-  if (punteggio >= 60) return "linear-gradient(135deg, var(--medium-green-400), var(--medium-green-600))";
-  if (punteggio >= 55) return "linear-gradient(135deg, var(--yellow-400), var(--yellow-600))";
-  if (punteggio >= 50) return "linear-gradient(135deg, var(--yellow-400), var(--yellow-600))";
-  if (punteggio >= 45) return "linear-gradient(135deg, var(--orange-400), var(--orange-600))";
-  if (punteggio >= 40) return "linear-gradient(135deg, var(--orange-400), var(--orange-600))";
-  return "linear-gradient(135deg, var(--red-400), var(--red-600))";
-}
-
-def getTextColorFromPunteggio(punteggio) {
-  return punteggio >= 65 ? "white" : "#111827";
-}
-
-def getBorderColorFromPunteggio(punteggio) {
-  if (punteggio >= 70) return "var(--strong-green-600)";
-  if (punteggio >= 65) return "var(--medium-green-600)";
-  if (punteggio >= 60) return "var(--yellow-600)";
-  if (punteggio >= 55) return "var(--orange-600)";
-  return "var(--red-600)";
-}
-
 const FILTRI = [
-	  ["TUTTO","Tutto"], ["SI","Comprare"], ["DEBOLE","Acquisto debole"],
-	  ["MANTIENI","Mantenere"], ["EVITA","Evitare"]
-	];
+  ["TUTTO", "Tutto"], ["SI", "Comprare"], ["DEBOLE", "Acquisto debole"],
+  ["MANTIENI", "Mantenere"], ["EVITA", "Evitare"]
+];
 
-	// Elemento per conteggio filtro dinamico
-	<div class="filtro-conteggio" style="margin-top: 8px; font-size: 0.82rem; color: var(--muted); text-align: center; min-height: 1.2em;"></div>
-	// Aggiungi pulsante tema
-	<div class="theme-switcher" style="position: absolute; top: 12px; right: 12px; z-index: 1000;">
-		<button id="theme-toggle" style="background: var(--card); border: 1px solid var(--line); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px;">
-			☀️/🌙
-		</button>
-	</div>
-
-	<div class="tabs-filters" style="display:flex;gap:8px;margin:12px 0 8px;padding-bottom:8px;overflow-x:auto">
-		<button class="filtro" data-consiglia="all" style="flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:999px;font:inherit;cursor:pointer;font-size:.85rem">Tutto</button>
-		<button class="filtro" data-consiglia="SI" style="flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:999px;font:inherit;cursor:pointer;font-size:.85rem">Cosa comprare</button>
-		<button class="filtro" data-consiglia="MANTIENI" style="flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:999px;font:inherit;cursor:pointer;font-size:.85rem">Cosa mantenere</button>
-		<button class="filtro" data-consiglia="EVITA" style="flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:999px;font:inherit;cursor:pointer;font-size:.85rem">Evitare</button>
-	</div>
-
-	// Inizializza tema	def initTheme() {
-	const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-	if (savedTheme === 'dark') {
-		document.documentElement.setAttribute('data-theme', 'dark');
-		document.getElementById('theme-toggle').textContent = '☀️';
-	} else {
-		document.documentElement.removeAttribute('data-theme');
-		document.getElementById('theme-toggle').textContent = '🌙';
-	}
-
-	// Toggle theme	document.getElementById('theme-toggle').onclick = () => {
-		const currentTheme = document.documentElement.getAttribute('data-theme');
-		let newTheme;
-		if (currentTheme === 'dark') {
-			document.documentElement.removeAttribute('data-theme');
-			document.getElementById('theme-toggle').textContent = '🌙';
-			newTheme = 'light';
-		} else {
-			document.documentElement.setAttribute('data-theme', 'dark');
-			document.getElementById('theme-toggle').textContent = '☀️';
-			newTheme = 'dark';
-		}
-		localStorage.setItem('theme', newTheme);
-		};
-
-		// Animazioni smooth per righe	document.addEventListener('DOMContentLoaded', () => {
-		const rows = document.querySelectorAll('tr.riga');
-		rows.forEach((row, index) => {
-			row.style.opacity = '0';
-			row.style.transform = 'translateY(10px)';
-			setTimeout(() => {
-				row.style.transition = 'all 0.3s ease';
-				row.style.opacity = '1';
-				row.style.transform = 'translateY(0)';
-			}, index * 30); // Animazione scaglionata
-		});
-		});
-
-		// Tooltip con punteggio dettagliato	def showScoreTooltip(element, punteggio, ticker) {
-		const tooltip = el('div', {style: `
-			position: absolute;
-			background: var(--card);
-			border: 1px solid var(--line);
-			border-radius: 8px;
-			padding: 12px;
-			font-size: 0.8rem;
-			z-index: 1000;
-			box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-			max-width: 250px;
-		`},
-			el('div', {style: 'font-weight: 600; margin-bottom: 8px; color: var(--ink);'}, `${ticker} - Punteggio: ${punteggio}`),
-			el('div', {style: 'display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;'},
-				...Array.from({length: 9}, (_, i) => {
-					const score = (i + 1) * 10;
-					const color = punteggio >= score ? 'var(--strong-green-400)' : 'var(--line)';
-					return el('div', {style: 'text-align: center; font-size: 0.7rem;'},
-						el('div', {style: 'color: ' + color + '; font-weight: bold;'}, score),
-						el('div', {style: 'color: var(--muted);'}, score >= punteggio ? '✓' : '');
-					});
-			)
-		);
-
-	document.body.append(tooltip);
-	setTimeout(() => tooltip.remove(), 3000);
-		}
-
-		// Aggiungi evento hover per righe con punteggio	document.querySelectorAll('tr.riga').forEach(row => {
-		row.addEventListener('mouseenter', (e) => {
-			const cells = row.querySelectorAll('td');
-			if (cells.length >= 3) {
-				const punteggioText = cells[2].textContent;
-				const punteggio = parseInt(punteggioText) || 0;
-				if (!isNaN(punteggio) && punteggioText.includes('/')) {
-					const ticker = cells[0].textContent.split(' ')[0];
-					showScoreTooltip(row, punteggio, ticker);
-				}
-			}
-		});
-		});
-
-const FILTRI = [
-	  ["TUTTO","Tutto"], ["SI","Comprare"], ["DEBOLE","Acquisto debole"],
-	  ["MANTIENI","Mantenere"], ["EVITA","Evitare"]
-	];
-
-fetch("data.json?"+Date.now()).then(r=>r.json()).then(d=> {
+fetch("data.json?" + Date.now()).then(r => r.json()).then(d => {
   const data = new Date(d.aggiornato);
-  $("agg").textContent = "Aggiornato il "+data.toLocaleDateString("it-IT",{day:"numeric",month:"long"})+
-    " alle "+data.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"})+" (prezzi dell'ultima chiusura)";
+  let agg = "Aggiornato il " + data.toLocaleDateString("it-IT", {day:"numeric", month:"long"}) +
+    " alle " + data.toLocaleTimeString("it-IT", {hour:"2-digit", minute:"2-digit"}) +
+    " (prezzi dell'ultima chiusura)";
+  if (d.sentimento) agg += " · Sentimento di mercato: " + d.sentimento;
+  $("agg").textContent = agg;
 
-  const box = (val,lab,c) => el("div",{}, el("b",{textContent:val,className:c||""}), el("span",{textContent:lab}));
-  $("riepilogo").append(box(eur(d.valore),"Valore virtuale"),
-                        box(pct(d.rendimento),"Da inizio prova",cls(d.rendimento)),
-                        box(eur(d.cash),"Liquidità"));
+  const box = (val, lab, c) => el("div", {}, el("b", {textContent: val, className: c || ""}), el("span", {textContent: lab}));
+  $("riepilogo").append(
+    box(eur(d.valore), "Valore virtuale"),
+    box(pct(d.rendimento), "Da inizio prova", cls(d.rendimento)),
+    box(eur(d.cash), "Liquidità"));
 
-  const nomi = [...Object.keys(d.categorie),"Portafoglio"];
+  const nomi = [...Object.keys(d.categorie), "Portafoglio"];
   let attivo = nomi[0];
   let filtro = "TUTTO";
-  nomi.forEach(n => $("tabs").append(el("button",{textContent:n,role:"tab",onclick:()=>{attivo=n;disegna();}})));
-  FILTRI.forEach(([k,lab]) => $("filtri").append(el("button",{textContent:lab,onclick:()=>{filtro=k;disegna();}})));
+  nomi.forEach(n => $("tabs").append(el("button", {textContent: n, role: "tab", onclick: () => { attivo = n; disegna(); }})));
+  FILTRI.forEach(([k, lab]) => $("filtri").append(el("button", {textContent: lab, onclick: () => { filtro = k; disegna(); }})));
 
-  // Filtri consigli (aggiunto per UI migliorata)
-  let filtroConsiglia = "all";
-  $(".filtro").ForEach(btn => {
-    btn.onclick = () => {
-      filtroConsiglia = btn.dataset.consiglia;
-      $(".filtro").forEach(b => b.classList.toggle("active", b.dataset.consiglia === filtroConsiglia))
-      disegna();
-    };
-  });
-
-  function tabellaCat(righe){
-    const t = el("table",{}, el("thead",{}, el("tr",{},
-      el("th",{textContent:"Strumento"}), el("th",{textContent:"Prezzo",className:"num"}),
-      el("th",{textContent:"Punti",className:"num"}), el("th",{textContent:"Segnale"}),
-      el("th",{textContent:"Consiglio"}))));
+  function tabellaCat(righe) {
+    const t = el("table", {}, el("thead", {}, el("tr", {},
+      el("th", {textContent: "Strumento"}), el("th", {textContent: "Prezzo", className: "num"}),
+      el("th", {textContent: "Punti", className: "num"}), el("th", {textContent: "Segnale"}),
+      el("th", {textContent: "Consiglio"}))));
     const tb = el("tbody");
-    righe.forEach(r=>{
-      const det = el("tr",{className:"dettaglio",hidden:true},
-        el("td",{colSpan:5,
-          style:"padding:12px;background:var(--bg);color:var(--ink);font-size:0.9rem;line-height:1.4"},
-          el("div",{style:"margin-bottom:8px;font-weight:600;color:var(--ink)"}, "Motivo del segnale:"),
-          el("div",{style:"white-space:pre-line;margin-bottom:8px"}, r.motivo),
-          r.peso && el("div",{style:"color:var(--muted);font-size:0.85rem"},
-            "Peso consigliato: "+String(r.peso).replace(".",",")+"% del capitale totale"))));
-      const riga = el("tr",{className:"riga",onclick:()=>{det.hidden=!det.hidden;}},
-        el("td",{}, r.ticker, el("span",{className:"nome",textContent:r.nome}),
-          el("span",{style:"display:block;font-size:0.75rem;color:var(--muted);margin-top:2px"}, r.nome)),
-        el("td",{className:"num"}, r.prezzo.toLocaleString("it-IT")+" "+(r.valuta==="EUR"?"€":r.valuta==="USD"?"$":r.valuta),
-          el("span",{className:"nome "+cls(r.var),textContent:pct(r.var,2)})),
-        el("td",{className:"num",textContent:r.punteggio}),
-        el("td",{}, el("span",{className:"chip "+r.segnale,textContent:r.segnale})),
-        el("td",{}, el("span",{className:"chip "+r.consiglia,style:
-          `background:${r.consiglia===\"SI\"?\"var(--buy-bg)\": r.consiglia===\"DEBILE\"?\"var(--weak-bg)\": r.consiglia===\"MANTIENI\"?\"var(--hold-bg)\": \"var(--avoid-bg)}";
-             color:${r.consiglia===\"SI\"?\"var(--buy)\": r.consiglia===\"DEBILE\"?\"var(--weak)\": r.consiglia===\"MANTIENI\"?\"var(--hold)\": \"var(--avoid)}";
-             border-color:${r.consiglia===\"SI\"?\"var(--buy)\": r.consiglia===\"DEBILE\"?\"var(--weak)\": r.consiglia===\"MANTIENI\"?\"var(--hold)\": \"var(--avoid)}";`,textContent:r.consiglia}));
-      tb.append(riga,det);
+    righe.forEach(r => {
+      const det = el("tr", {className: "dettaglio", hidden: true},
+        el("td", {colSpan: 5},
+          el("div", {style: "margin-bottom:6px;font-weight:600;color:var(--ink)", textContent: "Motivo del segnale:"}),
+          el("div", {style: "margin-bottom:6px", textContent: r.motivo}),
+          r.peso ? el("div", {textContent: "Peso consigliato: " + String(r.peso).replace(".", ",") + "% del capitale totale"}) : null));
+      const riga = el("tr", {className: "riga", onclick: () => { det.hidden = !det.hidden; }},
+        el("td", {}, r.ticker, el("span", {className: "nome", textContent: r.nome})),
+        el("td", {className: "num"}, r.prezzo.toLocaleString("it-IT") + " " + simbolo(r.valuta),
+          el("span", {className: "nome " + cls(r.var), textContent: pct(r.var, 2)})),
+        el("td", {className: "num", textContent: r.punteggio}),
+        el("td", {}, el("span", {className: "chip " + r.segnale, textContent: r.segnale})),
+        el("td", {}, el("span", {className: "chip " + r.consiglia, textContent: r.consiglia})));
+      tb.append(riga, det);
     });
     t.append(tb);
     return t;
   }
 
-  function grafico(s){
-    if(s.length<2) return el("p",{className:"vuoto",textContent:"Il grafico compare dal secondo giorno di aggiornamento."});
-    const v=s.map(x=>x.valore), mn=Math.min(...v), mx=Math.max(...v), W=300, H=90;
-    const pts=v.map((y,i)=>(i/(v.length-1)*W).toFixed(1)+","+(H-4-(y-mn)/((mx-mn)||1)*(H-8)).toFixed(1)).join(" ");
-    const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
-    svg.setAttribute("viewBox","0 0 "+W+" "+H); svg.setAttribute("width","100%"); svg.setAttribute("role","img");
-    svg.setAttribute("aria-label","Andamento del valore del portafoglio virtuale");
-    svg.innerHTML='<polyline fill="none" stroke="currentColor" stroke-width="2" points="'+pts+'"/>';
+  function grafico(s) {
+    if (s.length < 2) return el("p", {className: "vuoto", textContent: "Il grafico compare dal secondo giorno di aggiornamento."});
+    const v = s.map(x => x.valore), mn = Math.min(...v), mx = Math.max(...v), W = 300, H = 90;
+    const pts = v.map((y, i) => (i/(v.length-1)*W).toFixed(1) + "," + (H-4-(y-mn)/((mx-mn)||1)*(H-8)).toFixed(1)).join(" ");
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    svg.setAttribute("width", "100%");
+    svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", "Andamento del valore del portafoglio virtuale");
+    svg.style.color = "var(--buy)";
+    svg.innerHTML = '<polyline fill="none" stroke="currentColor" stroke-width="2" points="' + pts + '"/>';
     return svg;
   }
 
-  function disegna(){
-    [...$("(tabs").children].forEach(b=>b.setAttribute("aria-selected",b.textContent===attivo));
-    const inCategoria = attivo!=="Portafoglio";
+  function disegna() {
+    [...$("tabs").children].forEach(b => b.setAttribute("aria-selected", b.textContent === attivo));
+    const inCategoria = attivo !== "Portafoglio";
     $("filtri").hidden = !inCategoria;
-    [...$("(filtri").children].forEach((b,i)=>b.setAttribute("aria-pressed",FILTRI[i][0]===filtro));
+    [...$("filtri").children].forEach((b, i) => b.setAttribute("aria-pressed", FILTRI[i][0] === filtro));
 
-    // Aggiorna conteggio filtro dinamico
+    const c = $("contenuto");
+    c.replaceChildren();
+
     if (inCategoria) {
       const tutte = d.categorie[attivo];
-      const righeFiltrate = filtro === "TUTTO" ? tutte : tutte.filter(r => r.consiglia === filtro);
-      const countElement = document.querySelector('.filtro-conteggio');
-      if (countElement) {
-        const plural = righeFiltrate.length === 1 ? "strumento disponibile" : "strumenti disponibili";
-        countElement.textContent = righeFiltrate.length + " " + plural;
-      }
-    } else {
-      const countElement = document.querySelector('.filtro-conteggio');
-      if (countElement) {
-        countElement.textContent = "";
-      }
-    }
-
-    const c=$("contenuto"); c.replaceChildren();
-    if(inCategoria){
-      const tutte=d.categorie[attivo];
-      const righe=filtro===\"TUTTO\"?tutte:tutte.filter(r=>r.consiglia===filtro);
-      const msg=tutte.length?\"Nessuno strumento con questo consiglio.\\":\"Nessun dato disponibile per questa categoria.\";
-      c.append(righe.length?tabellaCat(righe):el("p",{className:"vuoto",textContent:msg}));
+      const righe = filtro === "TUTTO" ? tutte : tutte.filter(r => r.consiglia === filtro);
+      $("conteggio").textContent = righe.length + (righe.length === 1 ? " strumento" : " strumenti");
+      const msg = tutte.length ? "Nessuno strumento con questo consiglio." : "Nessun dato disponibile per questa categoria.";
+      c.append(righe.length ? tabellaCat(righe) : el("p", {className: "vuoto", textContent: msg}));
       return;
     }
-    c.append(el("div",{className:"blocco"}, el("h2",{textContent:"Valore del portafoglio virtuale"}), grafico(d.storico)));
-    const pos=el("div",{className:"blocco"}, el("h2",{textContent:"Posizioni aperte"}));
-    if(d.posizioni.length){
-      const t=el("table");
-      d.posizioni.forEach(p=>t.append(el("tr",{},
-        el("td",{}, p.ticker, el("span",{className:"nome",textContent:p.nome})),
-        el("td",{className:"num",textContent:eur(p.valore)}),
-        el("td",{className:"num "+cls(p.rendimento),textContent:pct(p.rendimento)}))));
+
+    $("conteggio").textContent = "";
+    c.append(el("div", {className: "blocco"}, el("h2", {textContent: "Valore del portafoglio virtuale"}), grafico(d.storico)));
+
+    const pos = el("div", {className: "blocco"}, el("h2", {textContent: "Posizioni aperte"}));
+    if (d.posizioni.length) {
+      const t = el("table");
+      d.posizioni.forEach(p => t.append(el("tr", {},
+        el("td", {}, p.ticker, el("span", {className: "nome", textContent: p.nome})),
+        el("td", {className: "num", textContent: eur(p.valore)}),
+        el("td", {className: "num " + cls(p.rendimento), textContent: pct(p.rendimento)}))));
       pos.append(t);
-    } else pos.append(el("p",{className:"vuoto",textContent:"Nessuna posizione: per ora nessuno strumento ha un segnale forte di acquisto."}));
+    } else {
+      pos.append(el("p", {className: "vuoto", textContent: "Nessuna posizione: per ora nessuno strumento ha un segnale forte di acquisto."}));
+    }
     c.append(pos);
-    const op=el("div",{className:"blocco"}, el("h2",{textContent:"Ultime operazioni"}));
-    if(d.operazioni.length){
-      const t=el("table");
-      d.operazioni.forEach(o=>t.append(el("tr",{},
-        el("td",{}, new Date(o.data).toLocaleDateString("it-IT",{day:"numeric",month:"short"})}),
-        el("td",{}, el("span",{className:"chip "+(o.tipo===\"COMPRA\"?\"COMPRA\":\"EVITA\"),textContent:o.tipo})),
-        el("td",{textContent:o.ticker}),
-        el("td",{className:"num",textContent:o.prezzo.toLocaleString("it-IT")+\" \"+(o.valuta||\"EUR\")}))));
+
+    const op = el("div", {className: "blocco"}, el("h2", {textContent: "Ultime operazioni"}));
+    if (d.operazioni.length) {
+      const t = el("table");
+      d.operazioni.forEach(o => t.append(el("tr", {},
+        el("td", {textContent: new Date(o.data).toLocaleDateString("it-IT", {day: "numeric", month: "short"})}),
+        el("td", {}, el("span", {className: "chip " + o.tipo, textContent: o.tipo})),
+        el("td", {}, o.ticker, o.motivo ? el("span", {className: "nome", textContent: o.motivo}) : null),
+        el("td", {className: "num", textContent: o.prezzo.toLocaleString("it-IT") + " €"}))));
       op.append(t);
-    } else op.append(el("p",{className:"vuoto",textContent:"Ancora nessuna operazione."}));
+    } else {
+      op.append(el("p", {className: "vuoto", textContent: "Ancora nessuna operazione."}));
+    }
     c.append(op);
   }
+
   disegna();
-  $("avviso").textContent = "Simulazione didattica con soldi finti: non è consulenza finanziaria."+
-    (d.errori.length?\" Strumenti senza dati oggi: \"+d.errori.join(\", \")+\".\":\");
-  }).catch(()=>{$("agg").textContent=\"Non riesco a leggere data.json: esegui prima aggiorna.py o il workflow.\";});
-	</script>
+  $("avviso").textContent = "Simulazione didattica con soldi finti: non è consulenza finanziaria." +
+    (d.errori.length ? " Strumenti senza dati oggi: " + d.errori.join(", ") + "." : "");
+}).catch(() => {
+  $("agg").textContent = "Non riesco a leggere data.json: esegui prima aggiorna.py o il workflow.";
+});
+</script>
 </body>
 </html>

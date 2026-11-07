@@ -6,6 +6,7 @@ Uso:  python aggiorna.py   ->  scrive data.json e portfolio.json
 """
 import json
 import math
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -18,7 +19,9 @@ QUOTA_CATEGORIA = 0.20       # 20% del capitale per ognuna delle 5 categorie
 SOGLIA_COMPRA = 65           # punteggio minimo per il segnale COMPRA
 SOGLIA_EVITA = 40            # sotto questo punteggio: EVITA
 SOGLIA_FORTE = 70            # punteggio da cui il consiglio è "SI" (il portafoglio compra solo da qui)
-STOP_PERDITA = 0.10          # vende se la perdita supera il 10% e il segnale non è più COMPRA
+STOP_PERDITA = 0.05          # vende se la perdita supera il 5% e il segnale non è più COMPRA
+MARKETSTACK_API_KEY = os.getenv("MARKETSTACK_API_KEY")
+USE_MARKETSTACK = bool(MARKETSTACK_API_KEY)
 
 # Massimo 10 strumenti per categoria. (ticker Yahoo Finance, nome)
 # I ticker che non danno dati vengono saltati e compaiono in "errori" di data.json.
@@ -88,88 +91,68 @@ FILE_PORTAFOGLIO = QUI / "portfolio.json"
 
 # ------------------------------------------------------------------ dati e calcoli
 def RSI(series, period=14):
-    """Calcola Relative Strength Index."""
+    """Relative Strength Index: restituisce una serie (usa l'ultimo valore)."""
     delta = series.diff()
-    gain = (delta.where(delta > 0, 0)).rolling(window=period).mean()
+    gain = delta.where(delta > 0, 0).rolling(window=period).mean()
     loss = (-delta.where(delta < 0, 0)).rolling(window=period).mean()
-    rs = gain / loss
-    rsi = 100 - (100 / (1 + rs))
-    return rsi
+    return 100 - (100 / (1 + gain / loss))
 
-def MFI(high, low, close, volume, period=14):
-    """Calcola Money Flow Index."""
-    typical_price = (high + low + close) / 3
-    money_flow = typical_price * volume
-
-    # Create DataFrame
-    import pandas as pd
-    mf_df = pd.DataFrame({
-        'typical': typical_price,
-        'money_flow': money_flow
-    })
-
-    positive_flow = []
-    negative_flow = []
-
-    for i in range(1, len(mf_df)):
-        if mf_df['typical'].iloc[i] > mf_df['typical'].iloc[i-1]:
-            positive_flow.append(mf_df['money_flow'].iloc[i])
-            negative_flow.append(0)
-        else:
-            positive_flow.append(0)
-            negative_flow.append(mf_df['money_flow'].iloc[i])
-
-    positive_sum = sum(positive_flow[-period:])
-    negative_sum = sum(negative_flow[-period:])
-
-    if negative_sum == 0:
-        return 100
-
-    mfi = 100 - (100 / (1 + positive_sum/negative_sum))
-    return mfi
 
 def calcola_sentimento_mercato(categorie):
-    """Calcola sentiment aggregato usando RSI/MFI di tutti gli asset.
-    Restituisce 'Bullish', 'Bearish', o 'Neutral'."""
-    try:
-        # Raccogli tutti i prezzi degli asset
-        tutti_i_prezzi = []
-
-        for cat_name, asset_list in categorie.items():
-            for asset in asset_list:
-                ticker = asset['ticker']
-                try:
-                    yf_ticker = yf.Ticker(ticker)
-                    hist = yf_ticker.history(period="60d", auto_adjust=True)
-                    if len(hist) >= 14:
-                        close_prices = hist['Close']
-                        # Calcola RSI
-                        rsi = RSI(close_prices.iloc[-14:])
-                        if not pd.isna(rsi):
-                            tutti_i_prezzi.append(float(rsi))
-                except Exception:
-                    continue
-
-        if not tutti_i_prezzi:
-            return "Neutral"
-
-        # Calcola RSI medio
-        rsi_medio = sum(tutti_i_prezzi) / len(tutti_i_prezzi)
-
-        # Determina sentiment
-        if rsi_medio >= 70:
-            return "Bullish"
-        elif rsi_medio <= 30:
-            return "Bearish"
-        else:
-            return "Neutral"
-
-    except Exception as e:
-        print(f"Errore calcolo sentiment: {e}")
+    """RSI medio di tutti gli strumenti gia' analizzati (nessun nuovo download).
+    Restituisce 'Bullish', 'Bearish' o 'Neutral'."""
+    valori = [r["rsi"] for righe in categorie.values() for r in righe
+              if r.get("rsi") is not None]
+    if not valori:
         return "Neutral"
+    medio = sum(valori) / len(valori)
+    if medio >= 60:
+        return "Bullish"
+    if medio <= 40:
+        return "Bearish"
+    return "Neutral"
+
+
+def scarica_marketstack(ticker):
+    """Recupera il prezzo di chiusura più recente da MarketStack.
+    Restituisce (prezzo, valuta) o None.
+    Valuta USD di default, EUR se ticker termina con .MI/.DE
+    Funziona solo se MARKETSTACK_API_KEY è configurato.
+    """
+    if not USE_MARKETSTACK or not MARKETSTACK_API_KEY:
+        return None
+
+    try:
+        import requests
+        endpoint = "https://api.marketstack.com/v1/intraday/latest"
+        params = {
+            "access_key": MARKETSTACK_API_KEY,
+            "symbols": ticker,
+            "limit": 1,
+        }
+        resp = requests.get(endpoint, params=params, timeout=10)
+        resp.raise_for_status()
+        data = resp.json()
+        if data.get("data") and len(data["data"]) > 0:
+            item = data["data"][0]
+            price = float(item["close"])
+            symbol = item.get("symbol", ticker)
+            currency = "USD"
+            if symbol.endswith((".MI", ".DE")):
+                currency = "EUR"
+            elif ".PA" in symbol:
+                currency = "EUR"
+            return price, currency
+    except Exception:
+        pass
+    return None
+
 
 def scarica(ticker):
-    """Ultimi 2 anni di prezzi di chiusura, oppure None se mancano dati."""
+    """Prova prima MarketStack, poi yfinance come fallback."""
+    result = scarica_marketstack(ticker)
+    if result:
+        return result
     try:
         chiusure = yf.Ticker(ticker).history(period="2y", auto_adjust=True)["Close"].dropna()
     except Exception:
@@ -194,6 +177,7 @@ def metriche(c):
         "r3": p / float(c.iloc[-64]) - 1,
         "r6": p / float(c.iloc[-127]) - 1,
         "vol": float(c.pct_change().tail(30).std() * math.sqrt(252)),
+        "rsi": None if pd.isna(RSI(c).iloc[-1]) else float(RSI(c).iloc[-1]),
     }
 
 
@@ -255,20 +239,36 @@ def analizza_categoria(strumenti, eurusd, errori):
 
 def pulisci(r):
     """Tiene solo i campi che servono alla pagina."""
-    return {
+    base = {
         "ticker": r["ticker"], "nome": r["nome"], "prezzo": round(r["p"], 2),
         "valuta": r["valuta"], "var": round(r["var"], 4), "punteggio": r["punteggio"],
-        "segnale": r["segnale"], "consiglia": r["consiglia"],
-        "peso": r["peso"], "motivo": r["motivo"],
+        "segnale": r["segnale"], "peso": r["peso"], "motivo": r["motivo"],
     }
+    # NUOVA chiave: "consiglia" per l'interfaccia utente
+    if r["segnale"] == "COMPRA" and r["punteggio"] >= 70:
+        base["consiglia"] = "SI"
+    elif r["segnale"] == "COMPRA":
+        base["consiglia"] = "DEBILE"
+    elif r["segnale"] == "MANTIENI":
+        base["consiglia"] = "MANTIENI"
+    else:
+        base["consiglia"] = "EVITA"
+    return base
 
 
 # --------------------------------------------------------------- portafoglio virtuale
 def carica_portafoglio():
+    pf = {}
     if FILE_PORTAFOGLIO.exists():
-        return json.loads(FILE_PORTAFOGLIO.read_text(encoding="utf-8"))
-    return {"inizio": datetime.now(timezone.utc).date().isoformat(),
-            "cash": CAPITALE_INIZIALE, "posizioni": {}, "operazioni": [], "storico": []}
+        pf = json.loads(FILE_PORTAFOGLIO.read_text(encoding="utf-8"))
+    # Assicura che esista il campo carico per ogni posizione
+    for t, x in pf.get("posizioni", {}).items():
+        if "carico" not in x:
+            x["carico"] = x.get("quote", 0) * (prezzi.get(t, 0) if 'prezzi' in locals() else 0)
+    if not pf:
+        pf = {"inizio": datetime.now(timezone.utc).date().isoformat(),
+              "cash": CAPITALE_INIZIALE, "posizioni": {}, "operazioni": [], "storico": []}
+    return pf
 
 
 def valore_posizioni(pf, prezzi):
@@ -296,16 +296,12 @@ def simula(pf, categorie, oggi):
             continue
         r = info[t][1]
         carico = pf["posizioni"][t]["carico"]
-        in_perdita = carico > 0 and prezzi[t] < carico * (1 - STOP_PERDITA)
+        in_perdita = carico > 0 and prezzi[t] < carico * 0.95  # -5%
 
-        # ✅ NUOVA REGOLA: Stop loss dinamico al 10% dal carico (indipendentemente dal segnale)
-        stop_loss_hit = carico > 0 and prezzi[t] < carico * 0.90  # -10% o più
-
-        if r["segnale"] == "EVITA" or (in_perdita and r["segnale"] != "COMPRA") or stop_loss_hit:
-            motivo_vendita = "EVITA" if r["segnale"] == "EVITA" else "Perdita >5%" if in_perdita else "Stop loss"
-            pf["operazioni"].append({"data": oggi, "tipo": "VENDI", "ticker": t,
-                                     "prezzo": round(prezzi[t], 2), "motivo": motivo_vendita})
-            _vendi(pf, t, prezzi[t], oggi)
+        if r["segnale"] == "EVITA":
+            _vendi(pf, t, prezzi[t], oggi, "EVITA")
+        elif in_perdita and r["segnale"] != "COMPRA":
+            _vendi(pf, t, prezzi[t], oggi, f"Perdita >5%")
 
     totale = pf["cash"] + valore_posizioni(pf, prezzi)
     for righe in categorie.values():
@@ -367,6 +363,7 @@ def main():
         "posizioni": sorted(posizioni, key=lambda p: -p["valore"]),
         "operazioni": pf["operazioni"][-15:][::-1],
         "storico": pf["storico"],
+        "sentimento": sentimento_mercato,
         "errori": errori,
     }
     FILE_DATI.write_text(json.dumps(dati, ensure_ascii=False, indent=1), encoding="utf-8")
