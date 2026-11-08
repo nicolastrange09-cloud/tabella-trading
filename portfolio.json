@@ -1,6 +1,6 @@
 {
  "inizio": "2026-10-29",
- "cash": 247.2305463669105,
+ "cash": 381.33988526805314,
  "posizioni": {
   "CSSPX.MI": {
    "quote": 0.06702502802254895,
@@ -9,10 +9,6 @@
   "SWDA.MI": {
    "quote": 0.38028598741068625,
    "carico": 131.47999572753906
-  },
-  "ISAC.MI": {
-   "quote": 0.4550004575276207,
-   "carico": 109.88999938964844
   },
   "VWCE.MI": {
    "quote": 0.29163021808098455,
@@ -38,17 +34,25 @@
    "quote": 1.8594273385981548,
    "carico": 26.889999389648438
   },
-  "HG=F": {
-   "quote": 11.314233350505697,
-   "carico": 5.892283162401539
+  "SMEA.MI": {
+   "quote": 0.23166971384140822,
+   "carico": 105.62000274658203
   },
-  "BZ=F": {
-   "quote": 0.6678723663671935,
-   "carico": 99.81947153958697
+  "MEUD.MI": {
+   "quote": 0.07639387057374891,
+   "carico": 320.29998779296875
   },
-  "CL=F": {
-   "quote": 0.7251260318805315,
-   "carico": 91.93804074827419
+  "G.MI": {
+   "quote": 0.34522189574215917,
+   "carico": 43.72999954223633
+  },
+  "AAPL": {
+   "quote": 0.04951018648329888,
+   "carico": 304.91812725987313
+  },
+  "ENEL.MI": {
+   "quote": 1.5574696783563542,
+   "carico": 9.692999839782715
   }
  },
  "operazioni": [
@@ -136,6 +140,64 @@
    "ticker": "AAPL",
    "prezzo": 294.85,
    "motivo": "Perdita >5%"
+  },
+  {
+   "data": "2026-11-08",
+   "tipo": "VENDI",
+   "ticker": "ISAC.MI",
+   "prezzo": 106.25,
+   "motivo": "EVITA"
+  },
+  {
+   "data": "2026-11-08",
+   "tipo": "VENDI",
+   "ticker": "HG=F",
+   "prezzo": 5.56,
+   "motivo": "Perdita >5%"
+  },
+  {
+   "data": "2026-11-08",
+   "tipo": "VENDI",
+   "ticker": "BZ=F",
+   "prezzo": 87.56,
+   "motivo": "Perdita >5%"
+  },
+  {
+   "data": "2026-11-08",
+   "tipo": "VENDI",
+   "ticker": "CL=F",
+   "prezzo": 80.89,
+   "motivo": "Perdita >5%"
+  },
+  {
+   "data": "2026-11-08",
+   "tipo": "COMPRA",
+   "ticker": "SMEA.MI",
+   "prezzo": 105.62
+  },
+  {
+   "data": "2026-11-08",
+   "tipo": "COMPRA",
+   "ticker": "MEUD.MI",
+   "prezzo": 320.3
+  },
+  {
+   "data": "2026-11-08",
+   "tipo": "COMPRA",
+   "ticker": "G.MI",
+   "prezzo": 43.73
+  },
+  {
+   "data": "2026-11-08",
+   "tipo": "COMPRA",
+   "ticker": "AAPL",
+   "prezzo": 304.92
+  },
+  {
+   "data": "2026-11-08",
+   "tipo": "COMPRA",
+   "ticker": "ENEL.MI",
+   "prezzo": 9.69
   }
  ],
  "storico": [
@@ -154,6 +216,11 @@
   {
    "data": "2026-11-03",
    "valore": 981.24
+  },
+  {
+   "data": "2026-11-08",
+   "valore": 970.1
   }
- ]
+ ],
+ "eurusd": 1.12283
 }
