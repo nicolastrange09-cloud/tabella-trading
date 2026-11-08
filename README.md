@@ -41,9 +41,9 @@ Da questo momento si aggiorna da sola ogni mattina (circa 07:30-08:30 italiane, 
 ## Come funziona il portafoglio virtuale
 
 - Parte da 1.000 € finti, 20% massimo per categoria.
-- Compra (a quote frazionarie) solo gli strumenti con consiglio **SI**.
-- Vende quando il segnale diventa EVITA, oppure quando la perdita supera il 10% dal prezzo di carico e il segnale non è più COMPRA.
-- I prezzi in dollari vengono convertiti in euro con il cambio del giorno. Se il cambio non è disponibile, l'aggiornamento si ferma invece di usare un valore sbagliato. Commissioni e tasse non sono simulate.
+- Compra (a quote frazionarie) solo gli strumenti con consiglio **SI** e con volatilità sotto il limite della categoria (`MAX_VOL` in `aggiorna.py`: ETF 25%, obbligazioni 20%, azioni 40%, crypto 90%, materie prime 40%). Lo strumento troppo volatile resta nella tabella, ma non viene comprato.
+- Vende quando il segnale diventa EVITA, oppure quando la perdita supera il 5% dal prezzo di carico e il segnale non è più COMPRA.
+- I prezzi in dollari vengono convertiti in euro con il cambio del giorno. Se il cambio non è disponibile si usa l'ultimo cambio salvato in `portfolio.json`; se non ce n'è nessuno, l'aggiornamento si ferma invece di usare un valore sbagliato. Commissioni e tasse non sono simulate.
 
 ## Modificare la lista degli strumenti
 

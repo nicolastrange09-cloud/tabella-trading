@@ -6,7 +6,6 @@ Uso:  python aggiorna.py   ->  scrive data.json e portfolio.json
 """
 import json
 import math
-import os
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -20,8 +19,11 @@ SOGLIA_COMPRA = 65           # punteggio minimo per il segnale COMPRA
 SOGLIA_EVITA = 40            # sotto questo punteggio: EVITA
 SOGLIA_FORTE = 70            # punteggio da cui il consiglio è "SI" (il portafoglio compra solo da qui)
 STOP_PERDITA = 0.05          # vende se la perdita supera il 5% e il segnale non è più COMPRA
-MARKETSTACK_API_KEY = os.getenv("MARKETSTACK_API_KEY")
-USE_MARKETSTACK = bool(MARKETSTACK_API_KEY)
+# Volatilità annua massima per COMPRARE (si applica solo agli acquisti: le posizioni
+# già aperte restano sempre monitorate e vendibili). Soglie diverse per categoria,
+# perché una crypto non è mai stabile quanto un'obbligazione.
+MAX_VOL = {"ETF": 0.25, "Obbligazioni": 0.20, "Azioni": 0.40,
+           "Crypto": 0.90, "Materie prime": 0.40}
 
 # Massimo 10 strumenti per categoria. (ticker Yahoo Finance, nome)
 # I ticker che non danno dati vengono saltati e compaiono in "errori" di data.json.
@@ -60,15 +62,7 @@ UNIVERSO = {
     ],
     "Crypto": [
         ("BTC-USD", "Bitcoin"),
-        ("ETH-USD", "Ethereum"),
-        ("SOL-USD", "Solana"),
-        ("BNB-USD", "BNB"),
-        ("XRP-USD", "XRP"),
-        ("ADA-USD", "Cardano"),
-        ("DOGE-USD", "Dogecoin"),
-        ("AVAX-USD", "Avalanche"),
-        ("LINK-USD", "Chainlink"),
-        ("DOT-USD", "Polkadot"),
+        ("ETH-USD", "Ethereum")
     ],
     "Materie prime": [
         ("GC=F", "Oro"),
@@ -113,46 +107,8 @@ def calcola_sentimento_mercato(categorie):
     return "Neutral"
 
 
-def scarica_marketstack(ticker):
-    """Recupera il prezzo di chiusura più recente da MarketStack.
-    Restituisce (prezzo, valuta) o None.
-    Valuta USD di default, EUR se ticker termina con .MI/.DE
-    Funziona solo se MARKETSTACK_API_KEY è configurato.
-    """
-    if not USE_MARKETSTACK or not MARKETSTACK_API_KEY:
-        return None
-
-    try:
-        import requests
-        endpoint = "https://api.marketstack.com/v1/intraday/latest"
-        params = {
-            "access_key": MARKETSTACK_API_KEY,
-            "symbols": ticker,
-            "limit": 1,
-        }
-        resp = requests.get(endpoint, params=params, timeout=10)
-        resp.raise_for_status()
-        data = resp.json()
-        if data.get("data") and len(data["data"]) > 0:
-            item = data["data"][0]
-            price = float(item["close"])
-            symbol = item.get("symbol", ticker)
-            currency = "USD"
-            if symbol.endswith((".MI", ".DE")):
-                currency = "EUR"
-            elif ".PA" in symbol:
-                currency = "EUR"
-            return price, currency
-    except Exception:
-        pass
-    return None
-
-
 def scarica(ticker):
-    """Prova prima MarketStack, poi yfinance come fallback."""
-    result = scarica_marketstack(ticker)
-    if result:
-        return result
+    """Scarica due anni di chiusure da yfinance (None se mancano dati)."""
     try:
         chiusure = yf.Ticker(ticker).history(period="2y", auto_adjust=True)["Close"].dropna()
     except Exception:
@@ -244,15 +200,7 @@ def pulisci(r):
         "valuta": r["valuta"], "var": round(r["var"], 4), "punteggio": r["punteggio"],
         "segnale": r["segnale"], "peso": r["peso"], "motivo": r["motivo"],
     }
-    # NUOVA chiave: "consiglia" per l'interfaccia utente
-    if r["segnale"] == "COMPRA" and r["punteggio"] >= 70:
-        base["consiglia"] = "SI"
-    elif r["segnale"] == "COMPRA":
-        base["consiglia"] = "DEBILE"
-    elif r["segnale"] == "MANTIENI":
-        base["consiglia"] = "MANTIENI"
-    else:
-        base["consiglia"] = "EVITA"
+    base["consiglia"] = r["consiglia"]
     return base
 
 
@@ -261,10 +209,6 @@ def carica_portafoglio():
     pf = {}
     if FILE_PORTAFOGLIO.exists():
         pf = json.loads(FILE_PORTAFOGLIO.read_text(encoding="utf-8"))
-    # Assicura che esista il campo carico per ogni posizione
-    for t, x in pf.get("posizioni", {}).items():
-        if "carico" not in x:
-            x["carico"] = x.get("quote", 0) * (prezzi.get(t, 0) if 'prezzi' in locals() else 0)
     if not pf:
         pf = {"inizio": datetime.now(timezone.utc).date().isoformat(),
               "cash": CAPITALE_INIZIALE, "posizioni": {}, "operazioni": [], "storico": []}
@@ -282,7 +226,10 @@ def _vendi(pf, ticker, prezzo, oggi, motivo=None):
           "prezzo": round(prezzo, 2)}
     if motivo:
         op["motivo"] = motivo
-    pf["operazioni"].append(op)
+    # Evita vendite duplicate dello stesso strumento nello stesso giorno
+    if not any(o.get("data") == oggi and o.get("ticker") == ticker and o.get("tipo") == "VENDI"
+               for o in pf["operazioni"]):
+        pf["operazioni"].append(op)
 
 
 def simula(pf, categorie, oggi):
@@ -296,19 +243,20 @@ def simula(pf, categorie, oggi):
             continue
         r = info[t][1]
         carico = pf["posizioni"][t]["carico"]
-        in_perdita = carico > 0 and prezzi[t] < carico * 0.95  # -5%
+        in_perdita = carico > 0 and prezzi[t] < carico * (1 - STOP_PERDITA)
 
         if r["segnale"] == "EVITA":
             _vendi(pf, t, prezzi[t], oggi, "EVITA")
         elif in_perdita and r["segnale"] != "COMPRA":
-            _vendi(pf, t, prezzi[t], oggi, f"Perdita >5%")
+            _vendi(pf, t, prezzi[t], oggi, f"Perdita >{STOP_PERDITA:.0%}")
 
     totale = pf["cash"] + valore_posizioni(pf, prezzi)
-    for righe in categorie.values():
+    for cat, righe in categorie.items():
         detenuto = sum(pf["posizioni"][r["ticker"]]["quote"] * r["p_eur"]
                        for r in righe if r["ticker"] in pf["posizioni"])
         nuovi = [r for r in righe
-                 if r["consiglia"] == "SI" and r["ticker"] not in pf["posizioni"]]
+                 if r["consiglia"] == "SI" and r["ticker"] not in pf["posizioni"]
+                 and r.get("vol", 0) <= MAX_VOL.get(cat, 0.40)]
         budget = min(totale * QUOTA_CATEGORIA - detenuto, pf["cash"])
         if not nuovi or budget <= 1:
             continue
@@ -330,11 +278,16 @@ def simula(pf, categorie, oggi):
 def main():
     ora = datetime.now(timezone.utc)
     oggi = ora.date().isoformat()
+    pf = carica_portafoglio()
     try:
         eurusd = float(yf.Ticker("EURUSD=X").history(period="5d")["Close"].dropna().iloc[-1])
     except Exception:
-        # Con un cambio sbagliato il portafoglio verrebbe falsato: meglio fermarsi.
-        raise SystemExit("Errore: cambio EUR/USD non disponibile, riprova più tardi.")
+        # Meglio l'ultimo cambio reale salvato che un valore inventato.
+        eurusd = pf.get("eurusd")
+        if not eurusd:
+            raise SystemExit("Errore: cambio EUR/USD non disponibile e nessun valore salvato, riprova più tardi.")
+        print(f"Attenzione: uso l'ultimo cambio salvato ({eurusd:.4f}).")
+    pf["eurusd"] = round(eurusd, 5)
 
     errori = []
     categorie = {nome: analizza_categoria(lista, eurusd, errori)
@@ -343,7 +296,6 @@ def main():
     # Calcola sentimento del mercato
     sentimento_mercato = calcola_sentimento_mercato(categorie)
 
-    pf = carica_portafoglio()
     totale, prezzi, info = simula(pf, categorie, oggi)
 
     posizioni = []

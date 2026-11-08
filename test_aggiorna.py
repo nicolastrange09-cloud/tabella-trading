@@ -80,6 +80,32 @@ def test_tiene_se_in_perdita_ma_compra():
     assert "T" in pf["posizioni"]
 
 
+def test_non_compra_se_troppo_volatile():
+    pf = nuovo_pf()
+    r = riga(80, "COMPRA", ticker="VOLA")
+    r["vol"] = 0.60
+    a.simula(pf, {"ETF": [r]}, "2026-01-02")  # limite ETF 25%
+    assert "VOLA" not in pf["posizioni"]
+    r2 = riga(80, "COMPRA", ticker="CRYPTO")
+    r2["vol"] = 0.60
+    pf2 = nuovo_pf()
+    a.simula(pf2, {"Crypto": [r2]}, "2026-01-02")  # limite crypto 90%
+    assert "CRYPTO" in pf2["posizioni"]
+
+
+def test_vende_anche_se_volatile():
+    pf = nuovo_pf(900)
+    pf["posizioni"]["T"] = {"quote": 1.0, "carico": 100.0}
+    r = riga(20, "EVITA")
+    r["vol"] = 0.95
+    a.simula(pf, {"ETF": [r]}, "2026-01-02")
+    assert "T" not in pf["posizioni"]
+
+
+def test_pulisci_consiglio_coerente():
+    assert a.pulisci(riga(67, "COMPRA"))["consiglia"] == "DEBOLE"
+
+
 if __name__ == "__main__":
     prove = [f for n, f in sorted(globals().items()) if n.startswith("test_")]
     for f in prove:
