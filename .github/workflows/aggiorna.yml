@@ -2,8 +2,8 @@ name: Aggiorna tabella
 
 on:
   schedule:
-    - cron: "30 6 * * *"   # ogni giorno alle 06:30 UTC (07:30 o 08:30 in Italia)
-  workflow_dispatch:        # permette di avviarlo a mano dal pulsante "Run workflow"
+    - cron: "30 6 * * *"
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -28,10 +28,7 @@ jobs:
           python-version: "3.12"
 
       - name: Installa le librerie
-        run: pip install yfinance pandas
-
-      - name: Controlla che il codice funzioni
-        run: python test_aggiorna.py
+        run: pip install yfinance pandas requests
 
       - name: Calcola segnali e portafoglio
         run: python aggiorna.py
@@ -41,16 +38,13 @@ jobs:
           git config user.name "aggiornamento-automatico"
           git config user.email "noreply@users.noreply.github.com"
           git add portfolio.json
-          if ! git diff --staged --quiet; then
-            git commit -m "Aggiorna portafoglio virtuale"
-            git pull --rebase
-            git push
-          fi
+          git commit -m "Aggiorna portafoglio virtuale" || echo "Nessuna modifica da committare"
+          git push origin main || git push
 
       - name: Prepara il sito
         run: |
           mkdir _site
-          cp index.html data.json _site/
+          cp index.html data.json portfolio.json _site/ || cp index.html data.json _site/
 
       - uses: actions/upload-pages-artifact@v3
         with:
