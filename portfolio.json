@@ -1,15 +1,7 @@
 {
  "inizio": "2026-10-29",
- "cash": 430.9512866427673,
+ "cash": 539.4631641177871,
  "posizioni": {
-  "CSSPX.MI": {
-   "quote": 0.06702502802254895,
-   "carico": 745.989990234375
-  },
-  "SWDA.MI": {
-   "quote": 0.38028598741068625,
-   "carico": 131.47999572753906
-  },
   "IBGS.MI": {
    "quote": 0.7162297915571966,
    "carico": 139.6199951171875
@@ -41,10 +33,6 @@
   "AAPL": {
    "quote": 0.04951018648329888,
    "carico": 304.91812725987313
-  },
-  "ENEL.MI": {
-   "quote": 1.5574696783563542,
-   "carico": 9.692999839782715
   },
   "ENI.MI": {
    "quote": 1.800570010773623,
@@ -214,6 +202,27 @@
    "tipo": "COMPRA",
    "ticker": "ENI.MI",
    "prezzo": 25.09
+  },
+  {
+   "data": "2026-11-20",
+   "tipo": "VENDI",
+   "ticker": "CSSPX.MI",
+   "prezzo": 700.76,
+   "motivo": "Perdita >5%"
+  },
+  {
+   "data": "2026-11-20",
+   "tipo": "VENDI",
+   "ticker": "SWDA.MI",
+   "prezzo": 123.48,
+   "motivo": "Perdita >5%"
+  },
+  {
+   "data": "2026-11-20",
+   "tipo": "VENDI",
+   "ticker": "ENEL.MI",
+   "prezzo": 9.36,
+   "motivo": "EVITA"
   }
  ],
  "storico": [
@@ -280,7 +289,11 @@
   {
    "data": "2026-11-19",
    "valore": 969.19
+  },
+  {
+   "data": "2026-11-20",
+   "valore": 961.75
   }
  ],
- "eurusd": 1.09866
+ "eurusd": 1.09963
 }
