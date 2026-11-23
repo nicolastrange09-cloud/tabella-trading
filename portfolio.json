@@ -1,6 +1,6 @@
 {
  "inizio": "2026-10-29",
- "cash": 609.6460716023523,
+ "cash": 542.2656349122487,
  "posizioni": {
   "IBGS.MI": {
    "quote": 0.7162297915571966,
@@ -26,9 +26,9 @@
    "quote": 0.04951018648329888,
    "carico": 304.91812725987313
   },
-  "ENI.MI": {
-   "quote": 1.800570010773623,
-   "carico": 25.094999313354492
+  "ENEL.MI": {
+   "quote": 11.60749479224608,
+   "carico": 9.503000259399414
   }
  },
  "operazioni": [
@@ -229,6 +229,19 @@
    "ticker": "MEUD.MI",
    "prezzo": 309.15,
    "motivo": "EVITA"
+  },
+  {
+   "data": "2026-11-23",
+   "tipo": "VENDI",
+   "ticker": "ENI.MI",
+   "prezzo": 23.84,
+   "motivo": "Perdita >5%"
+  },
+  {
+   "data": "2026-11-23",
+   "tipo": "COMPRA",
+   "ticker": "ENEL.MI",
+   "prezzo": 9.5
   }
  ],
  "storico": [
@@ -307,7 +320,11 @@
   {
    "data": "2026-11-22",
    "valore": 960.15
+  },
+  {
+   "data": "2026-11-23",
+   "valore": 961.54
   }
  ],
- "eurusd": 1.09697
+ "eurusd": 1.08909
 }
