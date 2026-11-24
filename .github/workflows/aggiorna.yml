@@ -46,9 +46,10 @@ jobs:
           mkdir _site
           cp index.html data.json portfolio.json _site/ || cp index.html data.json _site/
 
-      - uses: actions/upload-pages-artifact@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: '_site'
 
       - id: deploy
         uses: actions/deploy-pages@v4
